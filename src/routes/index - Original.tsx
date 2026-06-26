@@ -182,7 +182,7 @@ function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
         <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-soft sm:left-6 sm:top-6">
-          <ShieldCheck size={14} /> Campanha Verificada
+          <ShieldCheck size={14} /> 🐾 Campanha Verificada
         </span>
       </div>
 
@@ -242,8 +242,8 @@ function ProgressCard({ onDonate }: { onDonate: () => void }) {
 
         <div className="mt-5 grid grid-cols-3 gap-3 text-center">
           <Stat label="Arrecadado" value={`${pct}%`} />
-          <Stat label="Apoiadores" value="5" icon={<Users size={14} />} />
-          <Stat label="Dias restantes" value="14" icon={<Clock size={14} />} />
+          <Stat label="Apoiadores" value="184" icon={<Users size={14} />} />
+          <Stat label="Dias restantes" value="21" icon={<Clock size={14} />} />
         </div>
 
         <button
@@ -294,15 +294,15 @@ function OrganizerCard() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-[15px] font-bold sm:text-base">
-              Recanto Anjos Peludos
+              Instituto do Amor
             </p>
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
           <p className="truncate text-sm text-muted-foreground">
-            Goiânia 📍 GO
+            Organização responsável pela campanha
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Ativo(a) desde fevereiro/2013
+            Publicado em 12 de novembro de 2025
           </p>
         </div>
       </div>
@@ -424,7 +424,7 @@ function UpdatesPreview() {
 function SupportersList() {
   return (
     <p className="text-muted-foreground">
-      5 pessoas já apoiaram. Veja o feed em tempo real abaixo.
+      Mais de 180 pessoas já apoiaram. Veja o feed em tempo real abaixo.
     </p>
   );
 }
@@ -485,7 +485,7 @@ function Gallery() {
   return (
     <section data-reveal className="mt-12">
       <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
-        Resgates recentes
+        Imagens da campanha
       </h3>
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {imgs.map((i) => (
@@ -547,12 +547,12 @@ function NeedsSection() {
 
 function Transparency() {
   const items = [
-    { icon: <Building2 size={18} />, label: "Organização", value: "Recanto Anjos Peludos" },
+    { icon: <Building2 size={18} />, label: "Organização", value: "Instituto do Amor" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Joaquim a Voltar a Andar" },
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
     { icon: <MapPin size={18} />, label: "Arrecadado", value: "R$ 250,00" },
-    { icon: <ShieldCheck size={18} />, label: "Status", value: "Campanha Verificada" },
+    { icon: <ShieldCheck size={18} />, label: "Status", value: "🐾 Campanha Verificada" },
   ];
   return (
     <section data-reveal className="mt-14">
@@ -638,11 +638,11 @@ function Impact({ onDonate }: { onDonate: () => void }) {
 
 function DonationsFeed() {
   const initial = [
-    { name: "Maria Silva", value: 25, time: "há 3 minutos" },
-    { name: "João Pedro", value: 50, time: "há 8 minutos" },
-    { name: "Ana Costa", value: 100, time: "há 15 minutos" },
-    { name: "Carlos Mendes", value: 25, time: "há 22 minutos" },
-    { name: "Beatriz Lima", value: 50, time: "há 38 minutos" },
+    { name: "Maria Silva", value: 50, time: "há 3 minutos" },
+    { name: "João Pedro", value: 100, time: "há 8 minutos" },
+    { name: "Ana Costa", value: 25, time: "há 15 minutos" },
+    { name: "Carlos Mendes", value: 200, time: "há 22 minutos" },
+    { name: "Beatriz Lima", value: 30, time: "há 38 minutos" },
   ];
   return (
     <section data-reveal className="mt-14">
@@ -806,16 +806,16 @@ function FAQ() {
   const faqs = [
     {
       q: "Como funciona a doação?",
-      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para o responsável da campanha verificada.",
+      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para a campanha verificada.",
     },
-    { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX como forma de doação." },
+    { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX, cartão de crédito e boleto." },
     {
       q: "Recebo comprovante?",
-      a: "Sim. O comprovante é emitido logo após a confirmação.",
+      a: "Sim. O comprovante é enviado por email logo após a confirmação.",
     },
     {
       q: "A campanha é verificada?",
-      a: "Sim. Validamos documentos e a história do Joaquim antes de publicar.",
+      a: "Sim. Validamos documentos e a história de Joaquim antes de publicar.",
     },
   ];
   const [open, setOpen] = useState<number | null>(0);
@@ -939,6 +939,7 @@ function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-5 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.</span>
+          <span>Feito com ❤ no Brasil</span>
         </div>
       </div>
     </footer>
@@ -1042,7 +1043,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
             <div className="mt-1.5 text-base font-bold tracking-tight">{PIX_RECEIVER}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">
-              Fundadora e responsável pelo abrigo
+              Fundadora e responsável pela campanha
             </div>
           </div>
 

@@ -34,7 +34,6 @@ import gallery4 from "@/assets/gallery-4.jpg";
 import avatar1 from "@/assets/avatar-1.jpg";
 import avatar2 from "@/assets/avatar-2.jpg";
 import avatar3 from "@/assets/avatar-3.jpg";
-import videoThumb from "@/assets/video-thumb.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -109,7 +108,6 @@ export function Landing() {
         <ProgressCard onDonate={openPix} />
         <OrganizerCard />
         <Tabs onDonate={openPix} />
-        <VideoBlock />
         <Gallery />
         <NeedsSection />
         <Transparency />
@@ -426,50 +424,6 @@ function SupportersList() {
     <p className="text-muted-foreground">
       5 pessoas já apoiaram. Veja o feed em tempo real abaixo.
     </p>
-  );
-}
-
-/* ---------------- video ---------------- */
-
-function VideoBlock() {
-  const [playing, setPlaying] = useState(false);
-  return (
-    <section data-reveal className="mt-12">
-      <div className="relative overflow-hidden rounded-[20px] shadow-card">
-        {!playing ? (
-          <button
-            onClick={() => setPlaying(true)}
-            className="group relative block w-full"
-            aria-label="Reproduzir vídeo"
-          >
-            <img
-              src={videoThumb}
-              alt="Vídeo da família"
-              width={1600}
-              height={900}
-              loading="lazy"
-              className="aspect-video w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/35" />
-            <span className="absolute inset-0 grid place-items-center">
-              <span className="grid h-20 w-20 place-items-center rounded-full bg-card shadow-card transition-transform group-hover:scale-105">
-                <Play size={28} className="ml-1 fill-primary text-primary" />
-              </span>
-            </span>
-          </button>
-        ) : (
-          <div className="aspect-video w-full bg-black">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-              title="Vídeo da campanha"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-            />
-          </div>
-        )}
-      </div>
-    </section>
   );
 }
 
