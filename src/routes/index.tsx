@@ -429,6 +429,50 @@ function SupportersList() {
   );
 }
 
+/* ---------------- video ---------------- */
+
+function VideoBlock() {
+  const [playing, setPlaying] = useState(false);
+  return (
+    <section data-reveal className="mt-12">
+      <div className="relative overflow-hidden rounded-[20px] shadow-card">
+        {!playing ? (
+          <button
+            onClick={() => setPlaying(true)}
+            className="group relative block w-full"
+            aria-label="Reproduzir vídeo"
+          >
+            <img
+              src={videoThumb}
+              alt="Vídeo da família"
+              width={1600}
+              height={900}
+              loading="lazy"
+              className="aspect-video w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/35" />
+            <span className="absolute inset-0 grid place-items-center">
+              <span className="grid h-20 w-20 place-items-center rounded-full bg-card shadow-card transition-transform group-hover:scale-105">
+                <Play size={28} className="ml-1 fill-primary text-primary" />
+              </span>
+            </span>
+          </button>
+        ) : (
+          <div className="aspect-video w-full bg-black">
+            <iframe
+              className="h-full w-full"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+              title="Vídeo da campanha"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+            />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- gallery ---------------- */
 
 function Gallery() {
