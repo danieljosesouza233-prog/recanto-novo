@@ -113,7 +113,6 @@ export function Landing() {
         <Transparency />
         <Impact onDonate={openPix} />
         <DonationsFeed />
-        <Testimonials />
         <Updates />
         <FinalMessage onDonate={openPix} />
         <FAQ />
@@ -626,61 +625,6 @@ function DonationsFeed() {
           </li>
         ))}
       </ul>
-    </section>
-  );
-}
-
-/* ---------------- testimonials ---------------- */
-
-function Testimonials() {
-  const list = [
-    {
-      name: "Mariana A.",
-      avatar: avatar1,
-      text: "Doei e recebi a foto da família com a cesta. Emocionante ver o impacto.",
-    },
-    {
-      name: "Ricardo P.",
-      avatar: avatar2,
-      text: "Transparência total. Recebi comprovante e atualização da campanha.",
-    },
-    {
-      name: "Camila S.",
-      avatar: avatar3,
-      text: "Pequenos gestos viram grandes mudanças. Voltarei a doar.",
-    },
-  ];
-
-  const ref = useRef<HTMLDivElement>(null);
-  return (
-    <section data-reveal className="mt-14">
-      <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
-        Quem já ajudou conta
-      </h3>
-      <div
-        ref={ref}
-        className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {list.map((t) => (
-          <article
-            key={t.name}
-            className="min-w-[280px] max-w-[320px] shrink-0 snap-start rounded-2xl bg-card p-5 shadow-soft sm:min-w-[340px]"
-          >
-            <p className="text-sm leading-relaxed text-foreground/90">“{t.text}”</p>
-            <div className="mt-4 flex items-center gap-3">
-              <img
-                src={t.avatar}
-                alt={t.name}
-                width={512}
-                height={512}
-                loading="lazy"
-                className="h-10 w-10 rounded-full object-cover"
-              />
-              <div className="text-sm font-semibold">{t.name}</div>
-            </div>
-          </article>
-        ))}
-      </div>
     </section>
   );
 }
