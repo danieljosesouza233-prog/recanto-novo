@@ -182,7 +182,7 @@ function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
         <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-soft sm:left-6 sm:top-6">
-          <ShieldCheck size={14} /> Campanha Verificada
+          <ShieldCheck size={14} /> 🐾 Campanha Verificada
         </span>
       </div>
 
@@ -294,7 +294,7 @@ function OrganizerCard() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-[15px] font-bold sm:text-base">
-              Recanto Anjos Peludos
+              Instituto do Amor
             </p>
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
@@ -429,6 +429,50 @@ function SupportersList() {
   );
 }
 
+/* ---------------- video ---------------- */
+
+function VideoBlock() {
+  const [playing, setPlaying] = useState(false);
+  return (
+    <section data-reveal className="mt-12">
+      <div className="relative overflow-hidden rounded-[20px] shadow-card">
+        {!playing ? (
+          <button
+            onClick={() => setPlaying(true)}
+            className="group relative block w-full"
+            aria-label="Reproduzir vídeo"
+          >
+            <img
+              src={videoThumb}
+              alt="Vídeo da família"
+              width={1600}
+              height={900}
+              loading="lazy"
+              className="aspect-video w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/35" />
+            <span className="absolute inset-0 grid place-items-center">
+              <span className="grid h-20 w-20 place-items-center rounded-full bg-card shadow-card transition-transform group-hover:scale-105">
+                <Play size={28} className="ml-1 fill-primary text-primary" />
+              </span>
+            </span>
+          </button>
+        ) : (
+          <div className="aspect-video w-full bg-black">
+            <iframe
+              className="h-full w-full"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+              title="Vídeo da campanha"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+            />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- gallery ---------------- */
 
 function Gallery() {
@@ -441,7 +485,7 @@ function Gallery() {
   return (
     <section data-reveal className="mt-12">
       <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
-        Resgates recentes
+        Imagens da campanha
       </h3>
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {imgs.map((i) => (
@@ -508,7 +552,7 @@ function Transparency() {
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
     { icon: <MapPin size={18} />, label: "Arrecadado", value: "R$ 250,00" },
-    { icon: <ShieldCheck size={18} />, label: "Status", value: "Campanha Verificada" },
+    { icon: <ShieldCheck size={18} />, label: "Status", value: "🐾 Campanha Verificada" },
   ];
   return (
     <section data-reveal className="mt-14">
@@ -632,6 +676,61 @@ function DonationsFeed() {
   );
 }
 
+/* ---------------- testimonials ---------------- */
+
+function Testimonials() {
+  const list = [
+    {
+      name: "Mariana A.",
+      avatar: avatar1,
+      text: "Doei e recebi a foto da família com a cesta. Emocionante ver o impacto.",
+    },
+    {
+      name: "Ricardo P.",
+      avatar: avatar2,
+      text: "Transparência total. Recebi comprovante e atualização da campanha.",
+    },
+    {
+      name: "Camila S.",
+      avatar: avatar3,
+      text: "Pequenos gestos viram grandes mudanças. Voltarei a doar.",
+    },
+  ];
+
+  const ref = useRef<HTMLDivElement>(null);
+  return (
+    <section data-reveal className="mt-14">
+      <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
+        Quem já ajudou conta
+      </h3>
+      <div
+        ref={ref}
+        className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {list.map((t) => (
+          <article
+            key={t.name}
+            className="min-w-[280px] max-w-[320px] shrink-0 snap-start rounded-2xl bg-card p-5 shadow-soft sm:min-w-[340px]"
+          >
+            <p className="text-sm leading-relaxed text-foreground/90">“{t.text}”</p>
+            <div className="mt-4 flex items-center gap-3">
+              <img
+                src={t.avatar}
+                alt={t.name}
+                width={512}
+                height={512}
+                loading="lazy"
+                className="h-10 w-10 rounded-full object-cover"
+              />
+              <div className="text-sm font-semibold">{t.name}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- updates timeline ---------------- */
 
 function Updates() {
@@ -709,10 +808,10 @@ function FAQ() {
       q: "Como funciona a doação?",
       a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para a campanha verificada.",
     },
-    { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX como forma de pagamento." },
+    { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX, cartão de crédito e boleto." },
     {
       q: "Recebo comprovante?",
-      a: "Sim. O comprovante é emitido por logo após a confirmação.",
+      a: "Sim. O comprovante é enviado por email logo após a confirmação.",
     },
     {
       q: "A campanha é verificada?",
@@ -839,7 +938,8 @@ function Footer() {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-5 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.</span>          
+          <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.</span>
+          <span>Feito com ❤ no Brasil</span>
         </div>
       </div>
     </footer>
@@ -943,7 +1043,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
             <div className="mt-1.5 text-base font-bold tracking-tight">{PIX_RECEIVER}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">
-              Fundadora e responsável pelo abrigo
+              Fundadora e responsável pela campanha
             </div>
           </div>
 
