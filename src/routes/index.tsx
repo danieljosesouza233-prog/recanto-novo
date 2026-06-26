@@ -242,8 +242,8 @@ function ProgressCard({ onDonate }: { onDonate: () => void }) {
 
         <div className="mt-5 grid grid-cols-3 gap-3 text-center">
           <Stat label="Arrecadado" value={`${pct}%`} />
-          <Stat label="Apoiadores" value="21" icon={<Users size={14} />} />
-          <Stat label="Dias restantes" value="7" icon={<Clock size={14} />} />
+          <Stat label="Apoiadores" value="5" icon={<Users size={14} />} />
+          <Stat label="Dias restantes" value="14" icon={<Clock size={14} />} />
         </div>
 
         <button
@@ -424,52 +424,8 @@ function UpdatesPreview() {
 function SupportersList() {
   return (
     <p className="text-muted-foreground">
-      Mais de 180 pessoas já apoiaram. Veja o feed em tempo real abaixo.
+      5 pessoas já apoiaram. Veja o feed em tempo real abaixo.
     </p>
-  );
-}
-
-/* ---------------- video ---------------- */
-
-function VideoBlock() {
-  const [playing, setPlaying] = useState(false);
-  return (
-    <section data-reveal className="mt-12">
-      <div className="relative overflow-hidden rounded-[20px] shadow-card">
-        {!playing ? (
-          <button
-            onClick={() => setPlaying(true)}
-            className="group relative block w-full"
-            aria-label="Reproduzir vídeo"
-          >
-            <img
-              src={videoThumb}
-              alt="Vídeo da família"
-              width={1600}
-              height={900}
-              loading="lazy"
-              className="aspect-video w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/35" />
-            <span className="absolute inset-0 grid place-items-center">
-              <span className="grid h-20 w-20 place-items-center rounded-full bg-card shadow-card transition-transform group-hover:scale-105">
-                <Play size={28} className="ml-1 fill-primary text-primary" />
-              </span>
-            </span>
-          </button>
-        ) : (
-          <div className="aspect-video w-full bg-black">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-              title="Vídeo da campanha"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-            />
-          </div>
-        )}
-      </div>
-    </section>
   );
 }
 
@@ -639,10 +595,10 @@ function Impact({ onDonate }: { onDonate: () => void }) {
 function DonationsFeed() {
   const initial = [
     { name: "Maria Silva", value: 25, time: "há 3 minutos" },
-    { name: "João Pedro", value: 100, time: "há 8 minutos" },
-    { name: "Ana Costa", value: 50, time: "há 15 minutos" },
+    { name: "João Pedro", value: 50, time: "há 8 minutos" },
+    { name: "Ana Costa", value: 100, time: "há 15 minutos" },
     { name: "Carlos Mendes", value: 25, time: "há 22 minutos" },
-    { name: "Beatriz Lima", value: 25, time: "há 38 minutos" },
+    { name: "Beatriz Lima", value: 50, time: "há 38 minutos" },
   ];
   return (
     <section data-reveal className="mt-14">
