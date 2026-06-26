@@ -299,10 +299,10 @@ function OrganizerCard() {
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
           <p className="truncate text-sm text-muted-foreground">
-            Organização responsável pela campanha
+            Goiânia 📍 GO
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Publicado em 12 de novembro de 2025
+            Ativo(a) desde fevereiro/2013
           </p>
         </div>
       </div>
@@ -552,7 +552,7 @@ function Transparency() {
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
     { icon: <MapPin size={18} />, label: "Arrecadado", value: "R$ 250,00" },
-    { icon: <ShieldCheck size={18} />, label: "Status", value: "🐾 Campanha Verificada" },
+    { icon: <ShieldCheck size={18} />, label: "Status", value: "Campanha Verificada" },
   ];
   return (
     <section data-reveal className="mt-14">
