@@ -6,10 +6,14 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// Hard-pin Nitro to the Vercel preset so `vite build` emits the Vercel
+// Build Output API artifacts under `.vercel/output`, which Vercel picks up
+// automatically regardless of the detected framework.
 export default defineConfig({
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
     server: { entry: "server" },
+  },
+  nitro: {
+    preset: "vercel",
   },
 });
