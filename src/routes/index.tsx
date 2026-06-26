@@ -87,7 +87,7 @@ function useReveal() {
 
 /* ---------------- page ---------------- */
 
-function Landing() {
+export function Landing() {
   useReveal();
 
   const [scrolled, setScrolled] = useState(false);
