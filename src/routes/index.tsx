@@ -240,7 +240,7 @@ function ProgressCard({ onDonate }: { onDonate: () => void }) {
 
         <div className="mt-5 grid grid-cols-3 gap-3 text-center">
           <Stat label="Arrecadado" value={`${pct}%`} />
-          <Stat label="Apoiadores" value="5" icon={<Users size={14} />} />
+          <Stat label="Apoiadores" value="6" icon={<Users size={14} />} />
           <Stat label="Dias restantes" value="14" icon={<Clock size={14} />} />
         </div>
 
@@ -422,7 +422,7 @@ function UpdatesPreview() {
 function SupportersList() {
   return (
     <p className="text-muted-foreground">
-      5 pessoas já apoiaram. Veja o feed em tempo real abaixo.
+      Mais de 5 pessoas já apoiaram. Veja o feed em tempo real abaixo.
     </p>
   );
 }
@@ -596,7 +596,7 @@ function DonationsFeed() {
     { name: "João Pedro", value: 50, time: "há 8 minutos" },
     { name: "Ana Costa", value: 100, time: "há 15 minutos" },
     { name: "Carlos Mendes", value: 25, time: "há 22 minutos" },
-    { name: "Beatriz Lima", value: 50, time: "há 38 minutos" },
+    { name: "Beatriz Lima", value: 25, time: "há 38 minutos" },
   ];
   return (
     <section data-reveal className="mt-14">
