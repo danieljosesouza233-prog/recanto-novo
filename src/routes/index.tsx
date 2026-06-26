@@ -294,7 +294,7 @@ function OrganizerCard() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-[15px] font-bold sm:text-base">
-              Instituto do Amor
+              Recanto Anjos Peludos
             </p>
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
@@ -547,7 +547,7 @@ function NeedsSection() {
 
 function Transparency() {
   const items = [
-    { icon: <Building2 size={18} />, label: "Organização", value: "Instituto do Amor" },
+    { icon: <Building2 size={18} />, label: "Organização", value: "Recanto Anjos Peludos" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Joaquim a Voltar a Andar" },
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
