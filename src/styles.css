@@ -1,0 +1,141 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-footer: var(--footer);
+  --color-footer-foreground: var(--footer-foreground);
+
+  --shadow-soft: 0 2px 10px -2px oklch(0 0 0 / 0.06), 0 6px 24px -8px oklch(0 0 0 / 0.08);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 28px -10px oklch(0 0 0 / 0.10);
+  --shadow-cta: 0 12px 28px -10px oklch(0.68 0.18 152 / 0.55);
+}
+
+:root {
+  --radius: 1rem;
+
+  /* brand */
+  --primary: oklch(0.706 0.181 150);          /* #20C05C */
+  --primary-dark: oklch(0.612 0.165 150);     /* #0F9B46 */
+  --primary-soft: oklch(0.965 0.04 152);      /* #EAF9F0 */
+  --primary-foreground: oklch(1 0 0);
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.21 0.005 250);        /* #222 */
+  --surface: oklch(0.975 0.003 250);          /* #F5F7F8 */
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.005 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.005 250);
+
+  --secondary: oklch(0.96 0.005 250);
+  --secondary-foreground: oklch(0.21 0.005 250);
+  --muted: oklch(0.96 0.005 250);
+  --muted-foreground: oklch(0.55 0.01 257);   /* #6B7280 */
+  --accent: var(--primary-soft);
+  --accent-foreground: var(--primary-dark);
+
+  --destructive: oklch(0.62 0.21 27);
+  --destructive-foreground: oklch(1 0 0);
+
+  --border: oklch(0.92 0.005 250);
+  --input: oklch(0.92 0.005 250);
+  --ring: var(--primary);
+
+  --footer: oklch(0.26 0.03 260);             /* #172033 */
+  --footer-foreground: oklch(0.98 0.003 250);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes progress-grow {
+  from { width: 0%; }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .4; transform: scale(.85); }
+}
+
+@utility animate-fade-in-up {
+  animation: fade-in-up 0.7s cubic-bezier(.2,.7,.2,1) both;
+}
+@utility animate-fade-in {
+  animation: fade-in 0.6s ease-out both;
+}
+@utility animate-progress {
+  animation: progress-grow 1.4s cubic-bezier(.2,.7,.2,1) both;
+}
+@utility live-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@utility btn-cta {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 9999px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  box-shadow: var(--shadow-cta);
+  transition: background-color .2s ease, transform .2s ease, box-shadow .2s ease;
+  &:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+  &:active { transform: translateY(0); }
+}
