@@ -182,7 +182,7 @@ function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
         <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-soft sm:left-6 sm:top-6">
-          <ShieldCheck size={14} /> 🐾 Campanha Verificada
+          <ShieldCheck size={14} /> Campanha Verificada
         </span>
       </div>
 
