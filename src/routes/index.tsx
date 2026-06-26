@@ -242,8 +242,8 @@ function ProgressCard({ onDonate }: { onDonate: () => void }) {
 
         <div className="mt-5 grid grid-cols-3 gap-3 text-center">
           <Stat label="Arrecadado" value={`${pct}%`} />
-          <Stat label="Apoiadores" value="184" icon={<Users size={14} />} />
-          <Stat label="Dias restantes" value="21" icon={<Clock size={14} />} />
+          <Stat label="Apoiadores" value="21" icon={<Users size={14} />} />
+          <Stat label="Dias restantes" value="7" icon={<Clock size={14} />} />
         </div>
 
         <button
@@ -485,7 +485,7 @@ function Gallery() {
   return (
     <section data-reveal className="mt-12">
       <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
-        Imagens da campanha
+        Resgates recentes
       </h3>
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {imgs.map((i) => (
@@ -638,11 +638,11 @@ function Impact({ onDonate }: { onDonate: () => void }) {
 
 function DonationsFeed() {
   const initial = [
-    { name: "Maria Silva", value: 50, time: "há 3 minutos" },
+    { name: "Maria Silva", value: 25, time: "há 3 minutos" },
     { name: "João Pedro", value: 100, time: "há 8 minutos" },
-    { name: "Ana Costa", value: 25, time: "há 15 minutos" },
-    { name: "Carlos Mendes", value: 200, time: "há 22 minutos" },
-    { name: "Beatriz Lima", value: 30, time: "há 38 minutos" },
+    { name: "Ana Costa", value: 50, time: "há 15 minutos" },
+    { name: "Carlos Mendes", value: 25, time: "há 22 minutos" },
+    { name: "Beatriz Lima", value: 25, time: "há 38 minutos" },
   ];
   return (
     <section data-reveal className="mt-14">
