@@ -806,16 +806,16 @@ function FAQ() {
   const faqs = [
     {
       q: "Como funciona a doação?",
-      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para a campanha verificada.",
+      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para o responsável da campanha verificada.",
     },
-    { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX, cartão de crédito e boleto." },
+    { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX como forma de doação." },
     {
       q: "Recebo comprovante?",
-      a: "Sim. O comprovante é enviado por email logo após a confirmação.",
+      a: "Sim. O comprovante é emitido logo após a confirmação.",
     },
     {
       q: "A campanha é verificada?",
-      a: "Sim. Validamos documentos e a história de Joaquim antes de publicar.",
+      a: "Sim. Validamos documentos e a história do Joaquim antes de publicar.",
     },
   ];
   const [open, setOpen] = useState<number | null>(0);
@@ -939,7 +939,6 @@ function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-5 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.</span>
-          <span>Feito com ❤ no Brasil</span>
         </div>
       </div>
     </footer>
@@ -1043,7 +1042,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
             <div className="mt-1.5 text-base font-bold tracking-tight">{PIX_RECEIVER}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">
-              Fundadora e responsável pela campanha
+              Fundadora e responsável pelo abrigo
             </div>
           </div>
 
