@@ -37,9 +37,24 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   });
 }
 
+const BLOCKED_UA = /(httrack|wget|curl|libwww|harvest|scrapy|sitesucker|webcopier|webzip|teleport|offline\s*explorer|saveweb2zip|getleft|cyotek|grab-site|websucker|httpx|nikto|httrack)/i;
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const ua = request.headers.get("user-agent") ?? "";
+      if (BLOCKED_UA.test(ua)) {
+        return new Response("Forbidden", { status: 403 });
+      }
+
+      const url = new URL(request.url);
+      if (url.pathname === "/robots.txt") {
+        return new Response(
+          "User-agent: HTTrack\nDisallow: /\nUser-agent: wget\nDisallow: /\nUser-agent: SaveWeb2Zip\nDisallow: /\nUser-agent: WebCopier\nDisallow: /\nUser-agent: Teleport\nDisallow: /\nUser-agent: Offline Explorer\nDisallow: /\n\nUser-agent: *\nAllow: /\n",
+          { status: 200, headers: { "content-type": "text/plain; charset=utf-8" } },
+        );
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
@@ -52,3 +67,4 @@ export default {
     }
   },
 };
+

@@ -102,7 +102,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         children: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','3447794355524972');fbq('track','PageView');`,
       },
+      {
+        children: `(function(){try{var block=function(e){e.preventDefault();return false;};document.addEventListener('contextmenu',block);document.addEventListener('dragstart',block);document.addEventListener('selectstart',function(e){var t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;e.preventDefault();return false;});document.addEventListener('copy',block);document.addEventListener('cut',block);document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();if(e.key==='F12'){block(e);return;}if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(k==='i'||k==='j'||k==='c')){block(e);return;}if((e.ctrlKey||e.metaKey)&&(k==='u'||k==='s'||k==='p')){block(e);return;}});var s=document.createElement('style');s.innerHTML='html,body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none;}img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none;pointer-events:auto;}input,textarea,[contenteditable]{-webkit-user-select:text!important;user-select:text!important;}';document.head.appendChild(s);}catch(_){}})();`,
+      },
     ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,

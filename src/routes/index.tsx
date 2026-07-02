@@ -172,7 +172,7 @@ function Hero() {
       >
         <img
           src={heroFamily}
-          alt="Joaquim, cãozinho resgatado pelo Instituto do Amor"
+          alt="Joaquim, cãozinho resgatado pelo Recanto Anjos Peludos"
           width={1600}
           height={1100}
           className="h-[280px] w-full object-cover sm:h-[420px] lg:h-[520px]"
@@ -312,6 +312,21 @@ function OrganizerCard() {
 function Tabs({ onDonate }: { onDonate: () => void }) {
   const [active, setActive] = useState<"sobre" | "atualizacoes" | "ajudou">("sobre");
 
+  const handleClick = (id: "sobre" | "atualizacoes" | "ajudou") => {
+    setActive(id);
+    const target =
+      id === "atualizacoes"
+        ? "atualizacoes-section"
+        : id === "ajudou"
+        ? "doacoes-recentes"
+        : null;
+    if (target) {
+      requestAnimationFrame(() => {
+        document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  };
+
   return (
     <section data-reveal className="mt-10">
       <div className="flex gap-1 rounded-full bg-surface p-1">
@@ -322,7 +337,7 @@ function Tabs({ onDonate }: { onDonate: () => void }) {
         ].map((t) => (
           <button
             key={t.id}
-            onClick={() => setActive(t.id as typeof active)}
+            onClick={() => handleClick(t.id as typeof active)}
             className={`flex-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-all ${
               active === t.id
                 ? "bg-card text-foreground shadow-soft"
@@ -342,6 +357,7 @@ function Tabs({ onDonate }: { onDonate: () => void }) {
     </section>
   );
 }
+
 
 function AboutBlock({ onDonate }: { onDonate: () => void }) {
   return (
@@ -598,7 +614,8 @@ function DonationsFeed() {
     { name: "Beatriz Lima", value: 25, time: "há 38 minutos" },
   ];
   return (
-    <section data-reveal className="mt-14">
+    <section id="doacoes-recentes" data-reveal className="mt-14 scroll-mt-24">
+
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
           Doações recentes
@@ -629,8 +646,6 @@ function DonationsFeed() {
   );
 }
 
-/* ---------------- updates timeline ---------------- */
-
 function Updates() {
   const items = [
     {
@@ -650,7 +665,8 @@ function Updates() {
     },
   ];
   return (
-    <section data-reveal className="mt-14">
+    <section id="atualizacoes-section" data-reveal className="mt-14 scroll-mt-24">
+
       <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
         Atualizações da campanha
       </h3>
@@ -704,7 +720,7 @@ function FAQ() {
   const faqs = [
     {
       q: "Como funciona a doação?",
-      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para o responsável da campanha verificada.",
+      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para a campanha verificada.",
     },
     { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX como forma de doação." },
     {
@@ -716,7 +732,7 @@ function FAQ() {
       a: "Sim. Validamos documentos e a história do Joaquim antes de publicar.",
     },
   ];
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
   return (
     <section data-reveal className="mt-14">
       <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
@@ -897,6 +913,11 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
+    try {
+      (window as any).fbq?.("track", "Purchase", { value: 0, currency: "BRL" });
+    } catch {
+      /* noop */
+    }
   };
 
   return (
