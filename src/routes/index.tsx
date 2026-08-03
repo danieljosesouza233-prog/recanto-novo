@@ -38,7 +38,7 @@ import avatar3 from "@/assets/avatar-3.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Instituto do Amor — Ajude Joaquim a voltar a andar" },
+      { title: "Ajude Joaquim a voltar a andar ❤️" },
       {
         name: "description",
         content:
