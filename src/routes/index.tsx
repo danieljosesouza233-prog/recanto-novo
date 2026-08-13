@@ -251,7 +251,7 @@ function Hero() {
 /* ---------------- progress ---------------- */
 
 function ProgressCard({ onDonate }: { onDonate: () => void }) {
-  const raised = 410;
+  const raised = 450;
   const goal = 1400;
   const pct = Math.round((raised / goal) * 100);
 
@@ -509,7 +509,7 @@ function Transparency() {
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Joaquim a Voltar a Andar" },
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
-    { icon: <MapPin size={18} />, label: "Arrecadado", value: "R$ 250,00" },
+    { icon: <MapPin size={18} />, label: "Arrecadado", value: "R$ 450,00" },
     { icon: <ShieldCheck size={18} />, label: "Status", value: "Campanha Verificada" },
   ];
   return (
@@ -597,10 +597,10 @@ function Impact({ onDonate }: { onDonate: () => void }) {
 function DonationsFeed() {
   const initial = [
     { name: "Maria Silva", value: 50, time: "há 3 minutos" },
-    { name: "João Pedro", value: 100, time: "há 8 minutos" },
-    { name: "Ana Costa", value: 30, time: "há 15 minutos" },
-    { name: "Carlos Mendes", value: 200, time: "há 22 minutos" },
-    { name: "Beatriz Lima", value: 30, time: "há 38 minutos" },
+    { name: "João Pedro", value: 50, time: "há 8 minutos" },
+    { name: "Ana Costa", value: 25, time: "há 15 minutos" },
+    { name: "Carlos Mendes", value: 50, time: "há 22 minutos" },
+    { name: "Beatriz Lima", value: 25, time: "há 38 minutos" },
   ];
   return (
     <section id="doacoes-recentes" data-reveal>
@@ -853,7 +853,7 @@ function StickyCTA({ onDonate }: { onDonate: () => void }) {
 const PIX_KEY = "recantoanjospeludos@institutodoamor.org";
 const PIX_RECEIVER = "JANAINA SILVA RODRIGUES";
 
-const PIX_AMOUNTS = [30, 50, 70, 100, 150, 200];
+const PIX_AMOUNTS = [25, 50, 75, 100, 150, 200];
 const PIX_MIN = 5;
 const PIX_POPULAR = 50;
 
@@ -1185,7 +1185,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
             <div className="mt-1.5 text-base font-bold tracking-tight">{PIX_RECEIVER}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">
-              Fundadora e responsável pela campanha
+              Fundadora e responsável pelo abrigo
             </div>
           </div>
 
