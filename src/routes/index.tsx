@@ -825,8 +825,7 @@ function Footer() {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-5 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.</span>
-          <span>Feito com ❤ no Brasil</span>
+          <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.
         </div>
       </div>
     </footer>
