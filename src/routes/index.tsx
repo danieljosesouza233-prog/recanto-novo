@@ -1184,7 +1184,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
             <div className="mt-1.5 text-base font-bold tracking-tight">{PIX_RECEIVER}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">
-              Fundadora e responsável pelo abrigo
+              Fundadora e responsável pela campanha
             </div>
           </div>
 
