@@ -1,13 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
-  Search,
   Menu,
   ShieldCheck,
   Heart,
   Users,
   Clock,
-  Play,
   Building2,
   Mail,
   MapPin,
@@ -25,20 +23,17 @@ import {
   KeyRound,
 } from "lucide-react";
 
+import { trackMeta } from "@/lib/meta-track";
+import { markDonationCopied, recordDonation } from "@/lib/donations.functions";
+
+
 import heroFamily from "@/assets/hero-family.jpg";
 import organizer from "@/assets/organizer.jpg";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery4 from "@/assets/gallery-4.jpg";
-import avatar1 from "@/assets/avatar-1.jpg";
-import avatar2 from "@/assets/avatar-2.jpg";
-import avatar3 from "@/assets/avatar-3.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Ajude Joaquim a voltar a andar ❤️" },
+      { title: "Instituto do Amor — Ajude Joaquim a voltar a andar" },
       {
         name: "description",
         content:
@@ -86,11 +81,14 @@ function useReveal() {
 
 /* ---------------- page ---------------- */
 
+type TabId = "sobre" | "atualizacoes" | "ajudou";
+
 export function Landing() {
   useReveal();
 
   const [scrolled, setScrolled] = useState(false);
   const [pixOpen, setPixOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabId>("sobre");
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -98,22 +96,22 @@ export function Landing() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const openPix = () => setPixOpen(true);
+  const openPix = () => {
+    trackMeta("AddToCart");
+    setPixOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans pb-24 lg:pb-0">
-      <Header scrolled={scrolled} />
+      <Header scrolled={scrolled} onDonate={openPix} onSelectTab={setActiveTab} />
       <main className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
         <Hero />
         <ProgressCard onDonate={openPix} />
         <OrganizerCard />
-        <Tabs onDonate={openPix} />
-        <Gallery />
+        <Tabs onDonate={openPix} active={activeTab} setActive={setActiveTab} />
         <NeedsSection />
         <Transparency />
         <Impact onDonate={openPix} />
-        <DonationsFeed />
-        <Updates />
         <FinalMessage onDonate={openPix} />
         <FAQ />
       </main>
@@ -126,7 +124,25 @@ export function Landing() {
 
 /* ---------------- header ---------------- */
 
-function Header({ scrolled }: { scrolled: boolean }) {
+function Header({
+  scrolled,
+  onDonate,
+  onSelectTab,
+}: {
+  scrolled: boolean;
+  onDonate: () => void;
+  onSelectTab: (id: TabId) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const go = (id: TabId) => {
+    setOpen(false);
+    onSelectTab(id);
+    requestAnimationFrame(() => {
+      document.getElementById("campanha-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   return (
     <header
       className={`sticky top-0 z-40 bg-background/90 backdrop-blur transition-shadow ${
@@ -139,27 +155,58 @@ function Header({ scrolled }: { scrolled: boolean }) {
             <Heart size={18} fill="currentColor" />
           </span>
           <span className="truncate text-[17px] font-extrabold tracking-tight">
-            Instituto do Amor
+            Instituto <span className="font-normal">do</span> Amor
           </span>
         </a>
-        <div className="flex items-center gap-1">
-          <button
-            aria-label="Buscar"
-            className="grid h-10 w-10 place-items-center rounded-full text-foreground/70 transition-colors hover:bg-surface"
-          >
-            <Search size={20} />
-          </button>
+        <div className="relative flex items-center gap-1">
           <button
             aria-label="Menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
             className="grid h-10 w-10 place-items-center rounded-full text-foreground/70 transition-colors hover:bg-surface"
           >
-            <Menu size={22} />
+            {open ? <X size={22} /> : <Menu size={22} />}
           </button>
+
+          {open && (
+            <>
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setOpen(false)}
+                aria-hidden
+              />
+              <div className="animate-fade-in absolute right-0 top-12 z-20 w-56 overflow-hidden rounded-2xl bg-card p-2 shadow-card">
+                {[
+                  { id: "sobre", label: "Sobre" },
+                  { id: "atualizacoes", label: "Atualizações" },
+                  { id: "ajudou", label: "Quem ajudou" },
+                ].map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => go(m.id as TabId)}
+                    className="block w-full rounded-xl px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-surface"
+                  >
+                    {m.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    onDonate();
+                  }}
+                  className="btn-cta mt-1 flex h-11 w-full items-center justify-center px-4 text-sm"
+                >
+                  DOAR AGORA
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>
   );
 }
+
 
 /* ---------------- hero ---------------- */
 
@@ -172,7 +219,7 @@ function Hero() {
       >
         <img
           src={heroFamily}
-          alt="Joaquim, cãozinho resgatado pelo Recanto Anjos Peludos"
+          alt="Joaquim, cãozinho resgatado pelo Instituto do Amor"
           width={1600}
           height={1100}
           className="h-[280px] w-full object-cover sm:h-[420px] lg:h-[520px]"
@@ -239,8 +286,8 @@ function ProgressCard({ onDonate }: { onDonate: () => void }) {
 
         <div className="mt-5 grid grid-cols-3 gap-3 text-center">
           <Stat label="Arrecadado" value={`${pct}%`} />
-          <Stat label="Apoiadores" value="6" icon={<Users size={14} />} />
-          <Stat label="Dias restantes" value="14" icon={<Clock size={14} />} />
+          <Stat label="Apoiadores" value="184" icon={<Users size={14} />} />
+          <Stat label="Dias restantes" value="21" icon={<Clock size={14} />} />
         </div>
 
         <button
@@ -291,15 +338,15 @@ function OrganizerCard() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-[15px] font-bold sm:text-base">
-              Recanto Anjos Peludos
+              Instituto do Amor
             </p>
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
           <p className="truncate text-sm text-muted-foreground">
-            Goiânia 📍 GO
+            Organização responsável pela campanha
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Ativo(a) desde fevereiro/2013
+            Publicado em 12 de novembro de 2025
           </p>
         </div>
       </div>
@@ -309,50 +356,43 @@ function OrganizerCard() {
 
 /* ---------------- tabs ---------------- */
 
-function Tabs({ onDonate }: { onDonate: () => void }) {
-  const [active, setActive] = useState<"sobre" | "atualizacoes" | "ajudou">("sobre");
-
-  const handleClick = (id: "sobre" | "atualizacoes" | "ajudou") => {
-    setActive(id);
-    const target =
-      id === "atualizacoes"
-        ? "atualizacoes-section"
-        : id === "ajudou"
-        ? "doacoes-recentes"
-        : null;
-    if (target) {
-      requestAnimationFrame(() => {
-        document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    }
-  };
-
+function Tabs({
+  onDonate,
+  active,
+  setActive,
+}: {
+  onDonate: () => void;
+  active: TabId;
+  setActive: (id: TabId) => void;
+}) {
   return (
-    <section data-reveal className="mt-10">
-      <div className="flex gap-1 rounded-full bg-surface p-1">
-        {[
-          { id: "sobre", label: "Sobre" },
-          { id: "atualizacoes", label: "Atualizações" },
-          { id: "ajudou", label: "Quem ajudou" },
-        ].map((t) => (
-          <button
-            key={t.id}
-            onClick={() => handleClick(t.id as typeof active)}
-            className={`flex-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-all ${
-              active === t.id
-                ? "bg-card text-foreground shadow-soft"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+    <section id="campanha-tabs" data-reveal className="mt-10 scroll-mt-[70px]">
+      <div className="sticky top-[70px] z-30 -mx-1 bg-background/90 px-1 py-2 backdrop-blur">
+        <div className="flex gap-1 rounded-full bg-surface p-1">
+          {[
+            { id: "sobre", label: "Sobre" },
+            { id: "atualizacoes", label: "Atualizações" },
+            { id: "ajudou", label: "Quem ajudou" },
+          ].map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setActive(t.id as TabId)}
+              className={`flex-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-all ${
+                active === t.id
+                  ? "bg-card text-foreground shadow-soft"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div key={active} className="animate-fade-in mt-6">
         {active === "sobre" && <AboutBlock onDonate={onDonate} />}
-        {active === "atualizacoes" && <UpdatesPreview />}
-        {active === "ajudou" && <SupportersList />}
+        {active === "atualizacoes" && <Updates />}
+        {active === "ajudou" && <DonationsFeed />}
       </div>
     </section>
   );
@@ -426,57 +466,6 @@ function AboutBlock({ onDonate }: { onDonate: () => void }) {
   );
 }
 
-function UpdatesPreview() {
-  return (
-    <p className="text-muted-foreground">
-      Veja a timeline completa logo abaixo na seção “Atualizações da campanha”.
-    </p>
-  );
-}
-
-function SupportersList() {
-  return (
-    <p className="text-muted-foreground">
-      Mais de 5 pessoas já apoiaram. Veja o feed em tempo real abaixo.
-    </p>
-  );
-}
-
-/* ---------------- gallery ---------------- */
-
-function Gallery() {
-  const imgs = [
-    { src: gallery1, alt: "Família" },
-    { src: gallery2, alt: "Casa" },
-    { src: gallery3, alt: "Apoio social" },
-    { src: gallery4, alt: "Crianças" },
-  ];
-  return (
-    <section data-reveal className="mt-12">
-      <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
-        Resgates recentes
-      </h3>
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-        {imgs.map((i) => (
-          <div
-            key={i.alt}
-            className="overflow-hidden rounded-2xl shadow-soft transition-transform hover:-translate-y-0.5"
-          >
-            <img
-              src={i.src}
-              alt={i.alt}
-              width={800}
-              height={800}
-              loading="lazy"
-              className="aspect-square w-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ---------------- needs ---------------- */
 
 function NeedsSection() {
@@ -516,7 +505,7 @@ function NeedsSection() {
 
 function Transparency() {
   const items = [
-    { icon: <Building2 size={18} />, label: "Organização", value: "Recanto Anjos Peludos" },
+    { icon: <Building2 size={18} />, label: "Organização", value: "Instituto do Amor" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Joaquim a Voltar a Andar" },
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
@@ -607,14 +596,14 @@ function Impact({ onDonate }: { onDonate: () => void }) {
 
 function DonationsFeed() {
   const initial = [
-    { name: "Maria Silva", value: 25, time: "há 3 minutos" },
-    { name: "João Pedro", value: 50, time: "há 8 minutos" },
-    { name: "Ana Costa", value: 100, time: "há 15 minutos" },
-    { name: "Carlos Mendes", value: 25, time: "há 22 minutos" },
-    { name: "Beatriz Lima", value: 25, time: "há 38 minutos" },
+    { name: "Maria Silva", value: 50, time: "há 3 minutos" },
+    { name: "João Pedro", value: 100, time: "há 8 minutos" },
+    { name: "Ana Costa", value: 25, time: "há 15 minutos" },
+    { name: "Carlos Mendes", value: 200, time: "há 22 minutos" },
+    { name: "Beatriz Lima", value: 30, time: "há 38 minutos" },
   ];
   return (
-    <section id="doacoes-recentes" data-reveal className="mt-14 scroll-mt-24">
+    <section id="doacoes-recentes" data-reveal>
 
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
@@ -646,6 +635,8 @@ function DonationsFeed() {
   );
 }
 
+/* ---------------- updates timeline ---------------- */
+
 function Updates() {
   const items = [
     {
@@ -665,7 +656,7 @@ function Updates() {
     },
   ];
   return (
-    <section id="atualizacoes-section" data-reveal className="mt-14 scroll-mt-24">
+    <section id="atualizacoes-section" data-reveal>
 
       <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">
         Atualizações da campanha
@@ -720,7 +711,7 @@ function FAQ() {
   const faqs = [
     {
       q: "Como funciona a doação?",
-      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para a campanha verificada.",
+      a: "Você escolhe o valor, preenche seus dados e faz o pagamento. O recurso vai direto para a conta bancária do responsável pela campanha.",
     },
     { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX como forma de doação." },
     {
@@ -785,13 +776,15 @@ function Footer() {
   ];
   return (
     <footer className="mt-20 bg-footer text-footer-foreground">
-      <div className="mx-auto grid w-full max-w-[1180px] gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.2fr_2fr_1.2fr] lg:px-8">
+      <div className="mx-auto grid w-full max-w-[1180px] gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.2fr_2fr] lg:px-8">
         <div>
           <div className="flex items-center gap-2">
             <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary text-primary-foreground">
               <Heart size={18} fill="currentColor" />
             </span>
-            <span className="text-base font-extrabold">Instituto do Amor</span>
+            <span className="text-base font-extrabold">
+              Instituto <span className="font-normal">do</span> Amor
+            </span>
           </div>
           <p className="mt-4 text-sm text-footer-foreground/70">
             Conectamos pessoas que precisam de ajuda a quem quer transformar
@@ -828,31 +821,12 @@ function Footer() {
           ))}
         </div>
 
-        <div>
-          <div className="text-sm font-bold">Newsletter</div>
-          <p className="mt-3 text-sm text-footer-foreground/70">
-            Receba histórias e atualizações de novas campanhas.
-          </p>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] gap-2 rounded-full bg-white/5 p-1.5"
-          >
-            <input
-              type="email"
-              required
-              placeholder="Seu email"
-              className="min-w-0 bg-transparent px-4 text-sm placeholder:text-footer-foreground/50 focus:outline-none"
-            />
-            <button className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-dark">
-              Assinar
-            </button>
-          </form>
-        </div>
       </div>
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-5 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.</span>
+          <span>Feito com ❤ no Brasil</span>
         </div>
       </div>
     </footer>
@@ -879,8 +853,23 @@ function StickyCTA({ onDonate }: { onDonate: () => void }) {
 const PIX_KEY = "recantoanjospeludos@institutodoamor.org";
 const PIX_RECEIVER = "JANAINA SILVA RODRIGUES";
 
+const PIX_AMOUNTS = [30, 50, 70, 100, 150, 200];
+const PIX_MIN = 5;
+const PIX_POPULAR = 50;
+
+const brl = (n: number) =>
+  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
+
 function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
+  const [step, setStep] = useState(1);
+  const [amount, setAmount] = useState<number | null>(null);
+  const [customAmount, setCustomAmount] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
+  const [donationId, setDonationId] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (!open) return;
@@ -895,10 +884,68 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   }, [open, onClose]);
 
   useEffect(() => {
-    if (!open) setCopied(false);
+    if (!open) {
+      setCopied(false);
+      setStep(1);
+      setAmount(null);
+      setCustomAmount("");
+      setName("");
+      setPhone("");
+      setError("");
+      setDonationId(null);
+    }
   }, [open]);
 
+
   if (!open) return null;
+
+  const chosenValue =
+    amount ?? (customAmount ? Number(customAmount.replace(/[^\d,]/g, "").replace(",", ".")) : 0);
+
+  const maskPhone = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 2) return d;
+    if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+    if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+    return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  };
+
+  const goStep2 = () => {
+    if (!chosenValue || chosenValue <= 0) {
+      setError("Escolha um valor ou digite outro valor.");
+      return;
+    }
+    if (chosenValue < PIX_MIN) {
+      setError(`O valor mínimo para doação é ${brl(PIX_MIN)}.`);
+      return;
+    }
+    setError("");
+    trackMeta("InitiateCheckout", { value: chosenValue, currency: "BRL" });
+    setStep(2);
+  };
+
+  const goStep3 = () => {
+    if (name.trim().length < 2) {
+      setError("Informe seu nome.");
+      return;
+    }
+    if (phone.replace(/\D/g, "").length < 10) {
+      setError("Informe um celular válido.");
+      return;
+    }
+    setError("");
+    trackMeta("AddPaymentInfo", {
+      value: chosenValue,
+      currency: "BRL",
+      userData: { name, phone },
+    });
+    void recordDonation({
+      data: { nome: name.trim(), celular: phone, valor: chosenValue || 0 },
+    })
+      .then((res) => setDonationId(res.id))
+      .catch(() => {});
+    setStep(3);
+  };
 
   const handleCopy = async () => {
     try {
@@ -913,16 +960,18 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
-    try {
-      (window as any).fbq?.("track", "Purchase", { value: 0, currency: "BRL" });
-    } catch {
-      /* noop */
-    }
+    trackMeta("Purchase", {
+      value: chosenValue || 0,
+      currency: "BRL",
+      userData: { name, phone },
+    });
+    if (donationId) void markDonationCopied({ data: { id: donationId } }).catch(() => {});
   };
+
 
   return (
     <div
-      className="animate-fade-in fixed inset-0 z-50 flex items-end justify-center bg-black/55 backdrop-blur-sm sm:items-center"
+      className="animate-fade-in fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/55 backdrop-blur-sm sm:items-center"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -930,7 +979,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="animate-fade-in-up relative w-full max-w-[460px] rounded-t-[28px] bg-card p-6 shadow-card sm:rounded-[28px] sm:p-8"
+        className="animate-fade-in-up relative w-full max-w-[460px] rounded-t-[28px] bg-card p-6 shadow-card sm:my-8 sm:rounded-[28px] sm:p-8"
       >
         <button
           onClick={onClose}
@@ -940,19 +989,194 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           <X size={18} />
         </button>
 
-        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary-soft text-primary-dark">
-          <Heart size={22} fill="currentColor" />
+        {/* stepper */}
+        <div className="mt-2 flex w-full items-center justify-center gap-2">
+          {[1, 2, 3].map((s) => (
+            <Fragment key={s}>
+              <div
+                className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold transition-colors ${
+                  step >= s
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-surface text-muted-foreground"
+                }`}
+              >
+                {step > s ? <Check size={14} /> : s}
+              </div>
+              {s < 3 && (
+                <div
+                  className={`h-1 w-10 rounded-full transition-colors sm:w-14 ${
+                    step > s ? "bg-primary" : "bg-surface"
+                  }`}
+                />
+              )}
+            </Fragment>
+          ))}
         </div>
 
-        <h2 id="pix-title" className="mt-4 text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Doe via <span className="text-primary">PIX</span>
+
+        {step === 1 && (
+          <div className="animate-fade-in">
+            <h2 id="pix-title" className="mt-5 text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Escolha o <span className="text-primary">valor</span>
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <span className="font-semibold text-foreground">Qualquer valor é bem-vindo.</span> 100%
+              das doações vão direto para o tratamento do Joaquim.
+            </p>
+
+            <div className="mt-5 grid grid-cols-2 gap-2.5">
+              {PIX_AMOUNTS.map((v) => (
+                <button
+                  key={v}
+                  onClick={() => {
+                    setAmount(v);
+                    setCustomAmount("");
+                    setError("");
+                  }}
+                  className={`relative rounded-2xl border-2 py-3.5 text-sm font-bold transition-all ${
+                    amount === v
+                      ? "border-primary bg-primary-soft text-primary-dark"
+                      : "border-border bg-surface text-foreground hover:border-primary/50"
+                  }`}
+                >
+                  {v === PIX_POPULAR && (
+                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-soft">
+                      Mais escolhido
+                    </span>
+                  )}
+                  {brl(v)}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-3">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                Outro valor
+              </label>
+              <div className="mt-1.5 flex items-center gap-2 rounded-2xl border border-border bg-surface px-4 py-3.5 focus-within:border-primary">
+                <span className="text-sm font-bold text-muted-foreground">R$</span>
+                <input
+                  inputMode="decimal"
+                  value={customAmount}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/[^\d,.]/g, "");
+                    setCustomAmount(raw);
+                    setAmount(null);
+                    const n = raw ? Number(raw.replace(/\./g, "").replace(",", ".")) : 0;
+                    if (raw && n > 0 && n < PIX_MIN) {
+                      setError(`O valor mínimo para doação é ${brl(PIX_MIN)}.`);
+                    } else {
+                      setError("");
+                    }
+                  }}
+                  placeholder="0,00"
+                  className="w-full bg-transparent text-sm font-semibold outline-none placeholder:text-muted-foreground"
+                />
+              </div>
+            </div>
+
+            {error && <p className="mt-3 text-xs font-semibold text-destructive">{error}</p>}
+
+            <button
+              onClick={goStep2}
+              className="btn-cta mt-5 flex h-[58px] w-full items-center justify-center gap-2 px-6 text-base"
+            >
+              Continuar <ArrowRight size={18} />
+            </button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="animate-fade-in">
+            <h2 id="pix-title" className="mt-5 text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Quem está <span className="text-primary">ajudando</span> o Joaquim?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Deixe seu nome e celular para registrarmos sua contribuição e te avisarmos sobre cada
+              passo da recuperação.
+            </p>
+
+
+            <div className="mt-5 space-y-3">
+              <div>
+                <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Nome completo
+                </label>
+                <input
+                  value={name}
+                  maxLength={80}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Seu nome"
+                  className="mt-1.5 w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Celular
+                </label>
+                <input
+                  value={phone}
+                  inputMode="tel"
+                  onChange={(e) => {
+                    setPhone(maskPhone(e.target.value));
+                    setError("");
+                  }}
+                  placeholder="(11) 90000-0000"
+                  className="mt-1.5 w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold outline-none focus:border-primary"
+                />
+              </div>
+            </div>
+
+            {error && <p className="mt-3 text-xs font-semibold text-destructive">{error}</p>}
+
+            <button
+              onClick={goStep3}
+              className="btn-cta mt-5 flex h-[58px] w-full items-center justify-center gap-2 px-6 text-base"
+            >
+              Continuar <ArrowRight size={18} />
+            </button>
+            <button
+              onClick={() => {
+                setError("");
+                setStep(1);
+              }}
+              className="mt-3 w-full text-center text-xs font-semibold text-muted-foreground hover:text-foreground"
+            >
+              Voltar
+            </button>
+          </div>
+        )}
+
+        {step === 3 && (
+        <div className="animate-fade-in">
+        <h2 id="pix-title" className="mt-5 text-center text-2xl font-extrabold tracking-tight sm:text-3xl">
+          {name
+            ? `Obrigado, ${(() => {
+                const f = name.trim().split(" ")[0] ?? "";
+                return f.charAt(0).toUpperCase() + f.slice(1).toLowerCase();
+              })()}!`
+            : "Obrigado!"}{" "}
+          🐾
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Sua contribuição pode ajudar Joaquim a voltar a andar.{" "}
-          <span className="font-semibold text-foreground">Qualquer valor é bem-vindo</span> — seja
-          R$ 5, R$ 50 ou R$ 500. O que importa é o amor que vai junto. 100% das doações vão direto
-          para o tratamento dele.
+          Seu gesto já significa muito para o Joaquim. Falta só{" "}
+          <span className="font-semibold text-foreground">um último passo</span>: realizar o
+          pagamento via PIX para confirmar a sua doação.
         </p>
+
+        <div className="mt-5 rounded-2xl bg-primary-soft px-4 py-3.5 text-center">
+          <div className="text-[11px] font-bold uppercase tracking-wider text-primary-dark">
+            Valor da sua doação
+          </div>
+          <div className="mt-0.5 text-3xl font-extrabold tracking-tight text-primary-dark">
+            {brl(chosenValue || 0)}
+          </div>
+        </div>
+
+
 
         <div className="mt-6 space-y-3">
           <div className="rounded-2xl border border-border bg-surface p-4">
@@ -961,7 +1185,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
             <div className="mt-1.5 text-base font-bold tracking-tight">{PIX_RECEIVER}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">
-              Fundadora e responsável pelo abrigo
+              Fundadora e responsável pela campanha
             </div>
           </div>
 
@@ -994,7 +1218,10 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           <ShieldCheck size={13} className="text-primary" />
           Pagamento seguro processado pelo seu banco.
         </p>
+        </div>
+        )}
       </div>
+
     </div>
   );
 }
