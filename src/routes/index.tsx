@@ -155,7 +155,7 @@ function Header({
             <Heart size={18} fill="currentColor" />
           </span>
           <span className="truncate text-[17px] font-extrabold tracking-tight">
-            Instituto <span className="font-normal">do</span> Amor
+            Campanha <span className="font-normal">para</span> Joaquim
           </span>
         </a>
         <div className="relative flex items-center gap-1">
@@ -251,7 +251,7 @@ function Hero() {
 /* ---------------- progress ---------------- */
 
 function ProgressCard({ onDonate }: { onDonate: () => void }) {
-  const raised = 250;
+  const raised = 410;
   const goal = 1400;
   const pct = Math.round((raised / goal) * 100);
 
@@ -286,7 +286,7 @@ function ProgressCard({ onDonate }: { onDonate: () => void }) {
 
         <div className="mt-5 grid grid-cols-3 gap-3 text-center">
           <Stat label="Arrecadado" value={`${pct}%`} />
-          <Stat label="Apoiadores" value="184" icon={<Users size={14} />} />
+          <Stat label="Apoiadores" value="5" icon={<Users size={14} />} />
           <Stat label="Dias restantes" value="21" icon={<Clock size={14} />} />
         </div>
 
@@ -338,7 +338,7 @@ function OrganizerCard() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-[15px] font-bold sm:text-base">
-              Instituto do Amor
+              Recanto Anjos Peludos
             </p>
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
@@ -346,7 +346,7 @@ function OrganizerCard() {
             Organização responsável pela campanha
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Publicado em 12 de novembro de 2025
+            Publicado em 3 de agosto de 2026
           </p>
         </div>
       </div>
@@ -598,7 +598,7 @@ function DonationsFeed() {
   const initial = [
     { name: "Maria Silva", value: 50, time: "há 3 minutos" },
     { name: "João Pedro", value: 100, time: "há 8 minutos" },
-    { name: "Ana Costa", value: 25, time: "há 15 minutos" },
+    { name: "Ana Costa", value: 30, time: "há 15 minutos" },
     { name: "Carlos Mendes", value: 200, time: "há 22 minutos" },
     { name: "Beatriz Lima", value: 30, time: "há 38 minutos" },
   ];
@@ -711,7 +711,7 @@ function FAQ() {
   const faqs = [
     {
       q: "Como funciona a doação?",
-      a: "Você escolhe o valor, preenche seus dados e faz o pagamento. O recurso vai direto para a conta bancária do responsável pela campanha.",
+      a: "Você escolhe o valor, faz o pagamento e o recurso vai direto para o responsável pela campanha.",
     },
     { q: "Posso doar via PIX?", a: "Sim. Aceitamos PIX como forma de doação." },
     {
