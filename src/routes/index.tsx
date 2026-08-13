@@ -505,7 +505,7 @@ function NeedsSection() {
 
 function Transparency() {
   const items = [
-    { icon: <Building2 size={18} />, label: "Organização", value: "Instituto do Amor" },
+    { icon: <Building2 size={18} />, label: "Organização", value: "Recanto Anjos Peludos" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Joaquim a Voltar a Andar" },
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
@@ -853,7 +853,7 @@ function StickyCTA({ onDonate }: { onDonate: () => void }) {
 const PIX_KEY = "recantoanjospeludos@institutodoamor.org";
 const PIX_RECEIVER = "JANAINA SILVA RODRIGUES";
 
-const PIX_AMOUNTS = [25, 50, 75, 100, 150, 200];
+const PIX_AMOUNTS = [25, 50, 75, 100, 125, 150, 175, 200];
 const PIX_MIN = 5;
 const PIX_POPULAR = 50;
 
