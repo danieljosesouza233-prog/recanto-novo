@@ -286,8 +286,8 @@ function ProgressCard({ onDonate }: { onDonate: () => void }) {
 
         <div className="mt-5 grid grid-cols-3 gap-3 text-center">
           <Stat label="Arrecadado" value={`${pct}%`} />
-          <Stat label="Apoiadores" value="5" icon={<Users size={14} />} />
-          <Stat label="Dias restantes" value="21" icon={<Clock size={14} />} />
+          <Stat label="Apoiadores" value="15" icon={<Users size={14} />} />
+          <Stat label="Dias restantes" value="7" icon={<Clock size={14} />} />
         </div>
 
         <button
