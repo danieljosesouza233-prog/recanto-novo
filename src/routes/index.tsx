@@ -874,11 +874,33 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const html = document.documentElement;
+
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyPosition = body.style.position;
+    const prevBodyTop = body.style.top;
+    const prevBodyWidth = body.style.width;
+    const prevHtmlOverflow = html.style.overflow;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
+
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      body.style.position = prevBodyPosition;
+      body.style.top = prevBodyTop;
+      body.style.width = prevBodyWidth;
+
+      window.scrollTo(0, scrollY);
     };
   }, [open, onClose]);
 
