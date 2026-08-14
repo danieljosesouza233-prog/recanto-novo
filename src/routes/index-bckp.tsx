@@ -1069,7 +1069,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     }
                   }}
                   placeholder="0,00"
-                  className="w-full bg-transparent text-base font-semibold outline-none placeholder:text-muted-foreground"
+                  className="w-full bg-transparent text-sm font-semibold outline-none placeholder:text-muted-foreground"
                 />
               </div>
             </div>
@@ -1109,7 +1109,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     setError("");
                   }}
                   placeholder="Seu nome"
-                  className="mt-1.5 w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-base font-semibold outline-none focus:border-primary"
+                  className="mt-1.5 w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold outline-none focus:border-primary"
                 />
               </div>
               <div>
@@ -1124,7 +1124,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     setError("");
                   }}
                   placeholder="(11) 90000-0000"
-                  className="mt-1.5 w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-base font-semibold outline-none focus:border-primary"
+                  className="mt-1.5 w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold outline-none focus:border-primary"
                 />
               </div>
             </div>
