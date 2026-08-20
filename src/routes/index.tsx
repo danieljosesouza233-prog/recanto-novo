@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
         content:
           "Joaquim sofreu maus-tratos e teve a coluna fraturada. Precisamos de R$ 1.400 para sua cirurgia. Doe agora via PIX.",
       },
-      { property: "og:title", content: "Ajude Joaquim a voltar a andar — Instituto do Amor" },
+      { property: "og:title", content: "Ajude Joaquim a voltar a andar! ❤️" },
       {
         property: "og:description",
         content:
