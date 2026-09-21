@@ -234,7 +234,7 @@ function Hero() {
         data-reveal
         className="mt-6 text-[36px] font-extrabold leading-[1.05] tracking-[-0.02em] sm:mt-8 sm:text-[44px] lg:text-[56px]"
       >
-        Maltratado e abandonado às margens de uma rodovia, ele corre o risco de perder a visão.{" "}
+        Abandonado às margens de uma rodovia, ele corre o risco de perder a visão.{" "}
         <span className="text-primary">Pitoco precisa da nossa ajuda</span> para se recuperar.
       </h1>
       <p
