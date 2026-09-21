@@ -7,8 +7,9 @@ import {
   Users,
   Clock,
   Building2,
-  Mail,
-  MapPin,
+  Target,
+  DollarSign,
+  Wallet,
   BadgeCheck,
   ChevronDown,
   ArrowRight,
@@ -505,9 +506,9 @@ function Transparency() {
   const items = [
     { icon: <Building2 size={18} />, label: "Organização", value: "Fabiana Tompson" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Pitoco a se Recuperar" },
-    { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Exames, tratamento, possível cirurgia e recuperação" },
-    { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
-    { icon: <MapPin size={18} />, label: "Arrecadado", value: "R$ 450,00" },
+    { icon: <Target size={18} />, label: "Objetivo", value: "Exames, tratamento, possível cirurgia e recuperação" },
+    { icon: <DollarSign size={18} />, label: "Meta total", value: "R$ 1.400,00" },
+    { icon: <Wallet size={18} />, label: "Arrecadado", value: "R$ 450,00" },
     { icon: <ShieldCheck size={18} />, label: "Status", value: "Campanha Verificada" },
   ];
   return (
