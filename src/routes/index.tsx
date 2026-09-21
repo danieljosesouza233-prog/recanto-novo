@@ -335,15 +335,15 @@ function OrganizerCard() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-[15px] font-bold sm:text-base">
-              Recanto Anjos Peludos
+              Fabiana Tompson
             </p>
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
           <p className="truncate text-sm text-muted-foreground">
-            Organização responsável pela campanha
+            Perfil responsável pela campanha
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Publicado em 3 de agosto de 2026
+            Publicado em 21 de setembro de 2026
           </p>
         </div>
       </div>
@@ -503,7 +503,7 @@ function NeedsSection() {
 
 function Transparency() {
   const items = [
-    { icon: <Building2 size={18} />, label: "Organização", value: "Recanto Anjos Peludos" },
+    { icon: <Building2 size={18} />, label: "Organização", value: "Fabiana Tompson" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Pitoco a se Recuperar" },
     { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Exames, tratamento, possível cirurgia e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
