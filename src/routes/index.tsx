@@ -773,8 +773,8 @@ function FAQ() {
 
 function Footer() {
   return (
-    <footer className="mt-20 bg-footer text-footer-foreground">
-      <div className="mx-auto w-full max-w-[1180px] px-4 py-14 sm:px-6 lg:px-8">
+    <footer className="mt-14 bg-footer text-footer-foreground">
+      <div className="mx-auto w-full max-w-[1180px] px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary text-primary-foreground">
             <Heart size={18} fill="currentColor" />
@@ -783,14 +783,14 @@ function Footer() {
             Ajude o <span className="font-normal">Pitoco</span>
           </span>
         </div>
-        <p className="mt-4 max-w-md text-sm text-footer-foreground/70">
+        <p className="mt-2 max-w-md text-sm text-footer-foreground/70">
           Conectamos pessoas que precisam de ajuda a quem quer transformar
           vidas com transparência.
         </p>
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-5 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-3 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} Ajude o Pitoco. Todos os direitos reservados.</span>
         </div>
       </div>
