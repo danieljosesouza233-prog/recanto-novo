@@ -30,7 +30,7 @@ import { markDonationCopied, recordDonation } from "@/lib/donations.functions";
 import heroFamily from "@/assets/hero-family.jpg";
 import organizer from "@/assets/organizer.jpg";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/index-bckp")({
   head: () => ({
     meta: [
       { title: "Instituto do Amor — Ajude Joaquim a voltar a andar" },

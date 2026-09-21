@@ -9,15 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RecantoRouteImport } from './routes/recanto'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as IndexBckpRouteImport } from './routes/index-bckp'
+import { Route as RecantoRouteImport } from './routes/recanto'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
-const RecantoRoute = RecantoRouteImport.update({
-  id: '/recanto',
-  path: '/recanto',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -25,13 +30,14 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const IndexBckpRoute = IndexBckpRouteImport.update({
+  id: '/index-bckp',
+  path: '/index-bckp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const RecantoRoute = RecantoRouteImport.update({
+  id: '/recanto',
+  path: '/recanto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -43,12 +49,14 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/index-bckp': typeof IndexBckpRoute
   '/recanto': typeof RecantoRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/index-bckp': typeof IndexBckpRoute
   '/recanto': typeof RecantoRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
@@ -57,19 +65,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/index-bckp': typeof IndexBckpRoute
   '/recanto': typeof RecantoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/recanto' | '/admin'
+  fullPaths: '/' | '/auth' | '/index-bckp' | '/recanto' | '/admin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/recanto' | '/admin'
+  to: '/' | '/auth' | '/index-bckp' | '/recanto' | '/admin'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/index-bckp'
     | '/recanto'
     | '/_authenticated/admin'
   fileRoutesById: FileRoutesById
@@ -78,23 +88,17 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  IndexBckpRoute: typeof IndexBckpRoute
   RecantoRoute: typeof RecantoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/recanto': {
-      id: '/recanto'
-      path: '/recanto'
-      fullPath: '/recanto'
-      preLoaderRoute: typeof RecantoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -104,11 +108,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/index-bckp': {
+      id: '/index-bckp'
+      path: '/index-bckp'
+      fullPath: '/index-bckp'
+      preLoaderRoute: typeof IndexBckpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recanto': {
+      id: '/recanto'
+      path: '/recanto'
+      fullPath: '/recanto'
+      preLoaderRoute: typeof RecantoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -136,6 +154,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  IndexBckpRoute: IndexBckpRoute,
   RecantoRoute: RecantoRoute,
 }
 export const routeTree = rootRouteImport

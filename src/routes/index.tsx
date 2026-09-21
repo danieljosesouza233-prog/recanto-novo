@@ -27,23 +27,23 @@ import { trackMeta } from "@/lib/meta-track";
 import { markDonationCopied, recordDonation } from "@/lib/donations.functions";
 
 
-import heroFamily from "@/assets/hero-family.jpg";
+import heroFamily from "@/assets/pitoco.png";
 import organizer from "@/assets/organizer.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Instituto do Amor — Ajude Joaquim a voltar a andar" },
+      { title: "Instituto do Amor — Ajude Pitoco a se Recuperar" },
       {
         name: "description",
         content:
-          "Joaquim sofreu maus-tratos e teve a coluna fraturada. Precisamos de R$ 1.400 para sua cirurgia. Doe agora via PIX.",
+          "Pitoco foi maltratado e abandonado às margens de uma rodovia, correndo risco de perder a visão. Precisamos de R$ 1.400 para exames, tratamento e possível cirurgia. Doe agora via PIX.",
       },
-      { property: "og:title", content: "Ajude Joaquim a voltar a andar! ❤️" },
+      { property: "og:title", content: "Ajude Pitoco a se Recuperar! ❤️" },
       {
         property: "og:description",
         content:
-          "Espancado e abandonado, Joaquim precisa de cirurgia para voltar a andar. Sua doação faz a diferença.",
+          "Maltratado e abandonado, Pitoco corre risco de perder a visão. Sua doação faz a diferença.",
       },
       { property: "og:image", content: heroFamily },
       { name: "twitter:image", content: heroFamily },
@@ -155,7 +155,7 @@ function Header({
             <Heart size={18} fill="currentColor" />
           </span>
           <span className="truncate text-[17px] font-extrabold tracking-tight">
-            Campanha <span className="font-normal">para</span> Joaquim
+            Campanha <span className="font-normal">para</span> Pitoco
           </span>
         </a>
         <div className="relative flex items-center gap-1">
@@ -219,7 +219,7 @@ function Hero() {
       >
         <img
           src={heroFamily}
-          alt="Joaquim, cãozinho resgatado pelo Instituto do Amor"
+          alt="Pitoco, cãozinho resgatado após ser encontrado abandonado às margens de uma rodovia"
           width={1600}
           height={1100}
           className="h-[280px] w-full object-cover sm:h-[420px] lg:h-[520px]"
@@ -234,15 +234,17 @@ function Hero() {
         data-reveal
         className="mt-6 text-[36px] font-extrabold leading-[1.05] tracking-[-0.02em] sm:mt-8 sm:text-[44px] lg:text-[56px]"
       >
-        Ele foi espancado, abandonado e ficou sem conseguir andar. Agora{" "}
-        <span className="text-primary">Joaquim precisa da nossa ajuda</span> para sobreviver.
+        Ele foi maltratado, abandonado às margens de uma rodovia e agora corre o risco de perder a
+        visão. <span className="text-primary">Pitoco precisa da nossa ajuda</span> para se
+        recuperar.
       </h1>
       <p
         data-reveal
         className="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg"
       >
-        Joaquim sofreu maus-tratos, teve a coluna fraturada e hoje luta contra a dor todos os dias.
-        Precisamos arrecadar R$ 1.400 para custear sua cirurgia e dar a ele a chance de voltar a andar.
+        Pitoco teve os dentes serrados, apresenta marcas de agressões, febres frequentes, problemas
+        intestinais e uma grave alteração no olho esquerdo. Precisamos arrecadar R$ 1.400 para seus
+        exames, tratamento e possível cirurgia para tentar preservar sua visão.
       </p>
     </section>
   );
@@ -403,56 +405,57 @@ function AboutBlock({ onDonate }: { onDonate: () => void }) {
   return (
     <div className="space-y-6 leading-relaxed text-foreground/90">
       <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
-        A história do Joaquim
+        A história do Pitoco
       </h2>
       <p>
-        Quando encontramos Joaquim, a cena era devastadora. Ele havia sido abandonado após sofrer
-        agressões brutais. Segundo relatos, recebeu diversas pauladas que causaram uma{" "}
-        <span className="font-semibold text-primary-dark">grave fratura em sua coluna</span>.
+        Quando encontramos Pitoco, a cena era revoltante. Ele estava abandonado às margens de uma
+        rodovia, debilitado e com marcas de maus-tratos pelo corpo. Existe ainda a{" "}
+        <span className="font-semibold text-primary-dark">suspeita de que tenha sido atropelado</span>.
       </p>
       <p>
-        A dor era tão intensa que suas patas traseiras já não conseguiam tocar o chão. Sem forças,
-        Joaquim se arrastava usando apenas as patas dianteiras. Seu corpo mostrava sinais claros de
-        sofrimento: extremamente magro, com as costelas aparentes por causa da fome, feridas nas
-        patas e sinais de abandono que partiram o coração de todos que o viram.
+        Seus dentes haviam sido serrados, ele apresentava dificuldade para comer, problemas
+        intestinais e episódios frequentes de febre. Além de tudo isso, seu olho esquerdo estava
+        gravemente comprometido, colocando sua visão em risco.
       </p>
       <p>
-        Mesmo diante de tanta dor, Joaquim ainda demonstrava vontade de viver. Não podíamos
-        deixá-lo naquela situação. Realizamos o resgate imediatamente e o levamos para atendimento
+        Mesmo depois de tudo o que sofreu, Pitoco ainda lutava para sobreviver. Não podíamos
+        deixá-lo naquela situação. Fizemos o resgate imediatamente e começamos a buscar atendimento
         veterinário.
       </p>
 
       <h3 className="pt-2 text-xl font-extrabold tracking-tight">O diagnóstico</h3>
       <p>
-        Após a avaliação veterinária, recebemos a confirmação que mais temíamos:{" "}
+        Uma das maiores preocupações agora é seu olho esquerdo.{" "}
         <span className="font-semibold text-primary-dark">
-          Joaquim sofreu uma fratura na coluna
+          Pitoco ainda não está completamente cego
         </span>
-        . Essa lesão impede que ele utilize normalmente as patas traseiras e faz com que sinta
-        dores constantes. Sem tratamento adequado, suas chances de recuperação diminuem a cada dia.
+        , mas existe o risco de perder definitivamente a visão caso o quadro evolua sem o
+        tratamento adequado.
       </p>
       <p>
-        A boa notícia é que existe esperança. Segundo o veterinário, Joaquim pode voltar a andar,
-        mas precisa realizar a cirurgia o quanto antes.
+        A boa notícia é que ainda existe esperança. Há possibilidade de tratamento e, dependendo
+        da avaliação veterinária, uma cirurgia poderá ser necessária para tentar preservar sua
+        visão.
       </p>
 
       <h3 className="pt-2 text-xl font-extrabold tracking-tight">Um gesto de amor</h3>
       <p>
-        Ao conhecer a história de Joaquim, o veterinário se sensibilizou profundamente e decidiu
-        não cobrar as consultas e os acompanhamentos iniciais. Isso já representa uma enorme ajuda
-        para a campanha. Mas ainda precisamos arrecadar recursos para a cirurgia, medicamentos,
-        exames, materiais de recuperação, pós-operatório e fisioterapia inicial.
+        Resgatar Pitoco daquela rodovia foi apenas o começo. Agora precisamos arrecadar recursos
+        para investigar suas febres frequentes, tratar os problemas intestinais e sua dificuldade
+        para comer, realizar exames, comprar medicamentos e cuidar do seu olho.
+      </p>
+      <p>
+        Depois de tanta crueldade, queremos dar a ele a oportunidade de conhecer uma realidade
+        diferente: cuidado, proteção e dignidade.
       </p>
 
-      <h3 className="pt-2 text-xl font-extrabold tracking-tight">Como está Joaquim hoje</h3>
+      <h3 className="pt-2 text-xl font-extrabold tracking-tight">Como está Pitoco hoje</h3>
       <p>
-        Enquanto aguardamos a cirurgia, fazemos tudo o que está ao nosso alcance para aliviar seu
-        sofrimento. Colocamos meias protetoras em suas patas para evitar novos ferimentos causados
-        pelo atrito no chão. Também garantimos alimentação adequada, hidratação e acompanhamento
-        diário. Mesmo assim, ele continua sentindo dores e depende da ajuda de pessoas solidárias
-        para ter uma nova chance.{" "}
+        Enquanto buscamos seu tratamento, fazemos tudo ao nosso alcance para mantê-lo seguro e
+        cuidado. Mas Pitoco ainda apresenta febres frequentes, dificuldade para comer e problemas
+        intestinais, além da grave preocupação com seu olho esquerdo.{" "}
         <span className="font-semibold text-primary-dark">
-          Cada dia de espera significa mais sofrimento.
+          Ainda existe uma chance de preservar sua visão. Mas precisamos agir enquanto há tempo.
         </span>
       </p>
 
@@ -460,7 +463,7 @@ function AboutBlock({ onDonate }: { onDonate: () => void }) {
         onClick={onDonate}
         className="inline-flex items-center gap-2 text-sm font-semibold text-primary-dark hover:text-primary"
       >
-        Quero ajudar Joaquim agora <ArrowRight size={16} />
+        Quero ajudar Pitoco agora <ArrowRight size={16} />
       </button>
     </div>
   );
@@ -470,10 +473,10 @@ function AboutBlock({ onDonate }: { onDonate: () => void }) {
 
 function NeedsSection() {
   const needs = [
-    { icon: "🏥", title: "Cirurgia corretiva", desc: "Procedimento para corrigir a fratura na coluna de Joaquim." },
-    { icon: "💊", title: "Medicamentos", desc: "Analgésicos, anti-inflamatórios e antibióticos." },
-    { icon: "🧪", title: "Exames", desc: "Raio-X, tomografia e avaliações pré-operatórias." },
-    { icon: "🩹", title: "Pós-operatório", desc: "Materiais de recuperação e fisioterapia inicial." },
+    { icon: "👁️", title: "Tratamento do olho", desc: "Avaliações, tratamento e possível cirurgia para tentar preservar sua visão." },
+    { icon: "💊", title: "Medicamentos", desc: "Medicamentos necessários durante seu tratamento e recuperação." },
+    { icon: "🧪", title: "Exames", desc: "Investigação das febres, problemas intestinais e possíveis lesões." },
+    { icon: "🩹", title: "Recuperação", desc: "Alimentação, cuidados e acompanhamento durante sua recuperação." },
   ];
   return (
     <section data-reveal className="mt-14">
@@ -481,7 +484,7 @@ function NeedsSection() {
         Para onde sua doação vai
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Todos os recursos arrecadados serão destinados exclusivamente ao tratamento de Joaquim.
+        Todos os recursos arrecadados serão destinados exclusivamente ao tratamento de Pitoco.
       </p>
       <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {needs.map((n) => (
@@ -506,8 +509,8 @@ function NeedsSection() {
 function Transparency() {
   const items = [
     { icon: <Building2 size={18} />, label: "Organização", value: "Recanto Anjos Peludos" },
-    { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Joaquim a Voltar a Andar" },
-    { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Cirurgia, medicamentos e recuperação" },
+    { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Pitoco a se Recuperar" },
+    { icon: <BadgeCheck size={18} />, label: "Objetivo", value: "Exames, tratamento, possível cirurgia e recuperação" },
     { icon: <Mail size={18} />, label: "Meta total", value: "R$ 1.400,00" },
     { icon: <MapPin size={18} />, label: "Arrecadado", value: "R$ 450,00" },
     { icon: <ShieldCheck size={18} />, label: "Status", value: "Campanha Verificada" },
@@ -525,7 +528,7 @@ function Transparency() {
           Transparência total
         </h3>
         <p className="mt-2 text-sm text-foreground/80">
-          Todos os recursos arrecadados serão destinados exclusivamente ao tratamento de Joaquim.
+          Todos os recursos arrecadados serão destinados exclusivamente ao tratamento de Pitoco.
         </p>
         <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {items.map((i) => (
@@ -556,10 +559,10 @@ function Transparency() {
 
 function Impact({ onDonate }: { onDonate: () => void }) {
   const tiers = [
-    { value: 25, text: "🐾 Ajuda na compra de medicamentos e materiais básicos." },
+    { value: 25, text: "🐾 Ajuda na compra de medicamentos e alimentação." },
     { value: 50, text: "🐾 Contribui para exames e avaliações veterinárias." },
-    { value: 100, text: "🐾 Ajuda diretamente nos custos da cirurgia." },
-    { value: 200, text: "🐾 Financia uma parte importante do tratamento e recuperação." },
+    { value: 100, text: "🐾 Ajuda diretamente nos custos do tratamento." },
+    { value: 200, text: "🐾 Financia uma parte importante do tratamento e possível cirurgia." },
   ];
   return (
     <section id="doar" data-reveal className="mt-14">
@@ -585,7 +588,7 @@ function Impact({ onDonate }: { onDonate: () => void }) {
       </div>
       <div className="mt-5 rounded-2xl border border-dashed border-primary/50 bg-primary-soft p-5 text-center">
         <p className="text-sm text-foreground/80">
-          🐾 <span className="font-semibold">Qualquer valor</span> faz diferença na vida de Joaquim.
+          🐾 <span className="font-semibold">Qualquer valor</span> faz diferença na vida de Pitoco.
         </p>
       </div>
     </section>
@@ -641,18 +644,18 @@ function Updates() {
   const items = [
     {
       date: "Hoje",
-      title: "Aguardando recursos para a cirurgia",
-      text: "Joaquim segue em acompanhamento diário com meias protetoras, alimentação adequada e hidratação enquanto reunimos o valor necessário para a cirurgia.",
+      title: "Aguardando recursos para o tratamento",
+      text: "Pitoco segue em acompanhamento diário, com febres frequentes e problemas intestinais sob observação, enquanto reunimos o valor necessário para exames e possível cirurgia no olho.",
     },
     {
       date: "Esta semana",
       title: "Diagnóstico confirmado",
-      text: "O veterinário confirmou a fratura na coluna. Existe esperança: Joaquim pode voltar a andar, mas a cirurgia precisa ser feita o quanto antes.",
+      text: "A avaliação veterinária confirmou o risco à visão do olho esquerdo de Pitoco. Existe esperança: ele ainda não está completamente cego, mas precisa de tratamento o quanto antes.",
     },
     {
       date: "Resgate",
-      title: "Joaquim foi resgatado",
-      text: "Encontramos Joaquim abandonado após agressões brutais. Realizamos o resgate imediato e o levamos para atendimento veterinário.",
+      title: "Pitoco foi resgatado",
+      text: "Encontramos Pitoco abandonado às margens de uma rodovia, com marcas de maus-tratos. Realizamos o resgate imediato e o levamos para atendimento veterinário.",
     },
   ];
   return (
@@ -687,17 +690,25 @@ function FinalMessage({ onDonate }: { onDonate: () => void }) {
           Agora ele precisa conhecer algo diferente: a compaixão.
         </h3>
         <div className="mt-5 space-y-3 text-[15px] leading-relaxed text-primary-foreground/90 sm:text-base">
-          <p>Joaquim já sofreu mais do que qualquer animal deveria sofrer. Ele conheceu a fome, a violência e o abandono.</p>
-          <p>Sua contribuição pode ser a diferença entre uma vida de dor e uma nova oportunidade de caminhar novamente.</p>
+          <p>
+            Pitoco já conheceu a violência, a dor e o abandono. Teve seus dentes serrados, carrega
+            marcas de agressões e agora corre o risco de perder a visão do olho esquerdo.
+          </p>
+          <p>
+            Não podemos apagar o que fizeram com ele. Mas sua contribuição pode ajudar a mudar o
+            que acontecerá daqui para frente e dar a Pitoco a chance de receber o tratamento que
+            precisa.
+          </p>
           <p className="font-semibold text-primary-foreground">
-            Cada doação importa. Cada compartilhamento ajuda. Cada gesto de amor aproxima Joaquim da recuperação.
+            Cada doação importa. Cada compartilhamento ajuda. Cada gesto de amor aproxima Pitoco da
+            recuperação.
           </p>
         </div>
         <button
           onClick={onDonate}
           className="mt-7 inline-flex h-[58px] items-center justify-center rounded-full bg-card px-8 text-base font-bold text-primary-dark shadow-soft transition-transform hover:-translate-y-0.5"
         >
-          ❤️ Doe e ajude Joaquim a voltar a andar
+          ❤️ Doe e ajude Pitoco a preservar sua visão e se recuperar
         </button>
       </div>
     </section>
@@ -720,7 +731,7 @@ function FAQ() {
     },
     {
       q: "A campanha é verificada?",
-      a: "Sim. Validamos documentos e a história do Joaquim antes de publicar.",
+      a: "Sim. Validamos documentos e a história do Pitoco antes de publicar.",
     },
   ];
   const [open, setOpen] = useState<number | null>(null);
@@ -1020,7 +1031,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               <span className="font-semibold text-foreground">Qualquer valor é bem-vindo.</span> 100%
-              das doações vão direto para o tratamento do Joaquim.
+              das doações vão direto para o tratamento do Pitoco.
             </p>
 
             <div className="mt-5 grid grid-cols-2 gap-2.5">
@@ -1088,7 +1099,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
         {step === 2 && (
           <div className="animate-fade-in">
             <h2 id="pix-title" className="mt-5 text-2xl font-extrabold tracking-tight sm:text-3xl">
-              Quem está <span className="text-primary">ajudando</span> o Joaquim?
+              Quem está <span className="text-primary">ajudando</span> o Pitoco?
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Deixe seu nome e celular para registrarmos sua contribuição e te avisarmos sobre cada
@@ -1161,7 +1172,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           🐾
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Seu gesto já significa muito para o Joaquim. Falta só{" "}
+          Seu gesto já significa muito para o Pitoco. Falta só{" "}
           <span className="font-semibold text-foreground">um último passo</span>: realizar o
           pagamento via PIX para confirmar a sua doação.
         </p>
