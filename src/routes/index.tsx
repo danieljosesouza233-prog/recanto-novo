@@ -29,7 +29,7 @@ import organizer from "@/assets/organizer.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Instituto do Amor — Ajude Pitoco a se Recuperar" },
+      { title: "Ajude o Pitoco a se Recuperar" },
       {
         name: "description",
         content:
@@ -790,7 +790,7 @@ function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-3 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-[1180px] flex-col items-center gap-2 px-4 py-3 text-center text-xs text-footer-foreground/60 sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} Ajude o Pitoco. Todos os direitos reservados.</span>
         </div>
       </div>
