@@ -155,7 +155,7 @@ function Header({
             <Heart size={18} fill="currentColor" />
           </span>
           <span className="truncate text-[17px] font-extrabold tracking-tight">
-            Campanha <span className="font-normal">para</span> Pitoco
+            Ajude o <span className="font-normal">Pitoco</span>
           </span>
         </a>
         <div className="relative flex items-center gap-1">
