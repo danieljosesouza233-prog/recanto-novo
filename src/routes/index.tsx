@@ -11,10 +11,6 @@ import {
   MapPin,
   BadgeCheck,
   ChevronDown,
-  Instagram,
-  Facebook,
-  Youtube,
-  Twitter,
   ArrowRight,
   X,
   Copy,
@@ -776,66 +772,26 @@ function FAQ() {
 /* ---------------- footer ---------------- */
 
 function Footer() {
-  const cols = [
-    {
-      title: "Institucional",
-      links: ["Sobre nós", "Equipe", "Transparência", "Imprensa"],
-    },
-    { title: "Projetos", links: ["Campanhas ativas", "Concluídas", "Como propor"] },
-    { title: "Contato", links: ["Fale conosco", "Suporte", "Parcerias"] },
-  ];
   return (
     <footer className="mt-20 bg-footer text-footer-foreground">
-      <div className="mx-auto grid w-full max-w-[1180px] gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.2fr_2fr] lg:px-8">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary text-primary-foreground">
-              <Heart size={18} fill="currentColor" />
-            </span>
-            <span className="text-base font-extrabold">
-              Instituto <span className="font-normal">do</span> Amor
-            </span>
-          </div>
-          <p className="mt-4 text-sm text-footer-foreground/70">
-            Conectamos pessoas que precisam de ajuda a quem quer transformar
-            vidas com transparência.
-          </p>
-          <div className="mt-5 flex gap-2">
-            {[Instagram, Facebook, Youtube, Twitter].map((Icon, i) => (
-              <a
-                key={i}
-                href="#"
-                aria-label="Rede social"
-                className="grid h-10 w-10 place-items-center rounded-full bg-white/5 transition-colors hover:bg-primary"
-              >
-                <Icon size={16} />
-              </a>
-            ))}
-          </div>
+      <div className="mx-auto w-full max-w-[1180px] px-4 py-14 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2">
+          <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary text-primary-foreground">
+            <Heart size={18} fill="currentColor" />
+          </span>
+          <span className="text-base font-extrabold">
+            Ajude o <span className="font-normal">Pitoco</span>
+          </span>
         </div>
-
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-          {cols.map((c) => (
-            <div key={c.title}>
-              <div className="text-sm font-bold">{c.title}</div>
-              <ul className="mt-3 space-y-2 text-sm text-footer-foreground/70">
-                {c.links.map((l) => (
-                  <li key={l}>
-                    <a href="#" className="hover:text-primary">
-                      {l}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
+        <p className="mt-4 max-w-md text-sm text-footer-foreground/70">
+          Conectamos pessoas que precisam de ajuda a quem quer transformar
+          vidas com transparência.
+        </p>
       </div>
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-5 text-xs text-footer-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <span>© {new Date().getFullYear()} Instituto do Amor. Todos os direitos reservados.</span>
+          <span>© {new Date().getFullYear()} Ajude o Pitoco. Todos os direitos reservados.</span>
         </div>
       </div>
     </footer>
