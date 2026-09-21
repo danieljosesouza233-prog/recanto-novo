@@ -28,7 +28,7 @@ import { markDonationCopied, recordDonation } from "@/lib/donations.functions";
 
 
 import heroFamily from "@/assets/hero-family.jpg";
-import organizer from "@/assets/organizer.jpg";
+import organizer from "@/assets/organizer.png";
 
 export const Route = createFileRoute("/index-bckp")({
   head: () => ({
