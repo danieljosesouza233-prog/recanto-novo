@@ -215,16 +215,15 @@ function Hero() {
     <section id="top" className="pt-6 sm:pt-10">
       <div
         data-reveal
-        className="relative overflow-hidden rounded-[28px] shadow-card"
+        className="relative overflow-hidden rounded-[28px] bg-black shadow-card"
       >
         <img
           src={heroFamily}
           alt="Pitoco, cãozinho resgatado após ser encontrado abandonado às margens de uma rodovia"
           width={1600}
           height={1100}
-          className="h-[280px] w-full object-cover sm:h-[420px] lg:h-[520px]"
+          className="max-h-[520px] w-full object-contain"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
         <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-soft sm:left-6 sm:top-6">
           <ShieldCheck size={14} /> Campanha Verificada
         </span>
