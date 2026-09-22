@@ -7,11 +7,11 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Acesso restrito | Instituto do Amor" },
-      { name: "description", content: "Área administrativa do Instituto do Amor." },
+      { title: "Acesso restrito | Ajude o Pitoco" },
+      { name: "description", content: "Área administrativa da campanha Ajude o Pitoco." },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Acesso restrito | Instituto do Amor" },
-      { property: "og:description", content: "Área administrativa do Instituto do Amor." },
+      { property: "og:title", content: "Acesso restrito | Ajude o Pitoco" },
+      { property: "og:description", content: "Área administrativa da campanha Ajude o Pitoco." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -56,7 +56,7 @@ function AuthPage() {
         <div className="flex items-center justify-center gap-2">
           <Heart size={20} className="text-primary" fill="currentColor" />
           <span className="text-lg font-extrabold tracking-tight">
-            Instituto <span className="font-normal">do</span> Amor
+            Ajude o <span className="font-normal">Pitoco</span>
           </span>
         </div>
         <h1 className="mt-5 text-center text-xl font-extrabold tracking-tight">

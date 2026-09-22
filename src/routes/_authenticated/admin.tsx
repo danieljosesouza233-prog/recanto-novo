@@ -9,10 +9,10 @@ import { claimFirstAdmin, listDonations } from "@/lib/donations.functions";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Painel de doações | Instituto do Amor" },
+      { title: "Painel de doações | Ajude o Pitoco" },
       { name: "description", content: "Controle interno das doações recebidas na campanha." },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Painel de doações | Instituto do Amor" },
+      { property: "og:title", content: "Painel de doações | Ajude o Pitoco" },
       {
         property: "og:description",
         content: "Controle interno das doações recebidas na campanha.",
