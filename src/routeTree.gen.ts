@@ -13,7 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexBckpRouteImport } from './routes/index-bckp'
-import { Route as RecantoRouteImport } from './routes/recanto'
+import { Route as PitocoRouteImport } from './routes/pitoco'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,9 +35,9 @@ const IndexBckpRoute = IndexBckpRouteImport.update({
   path: '/index-bckp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecantoRoute = RecantoRouteImport.update({
-  id: '/recanto',
-  path: '/recanto',
+const PitocoRoute = PitocoRouteImport.update({
+  id: '/pitoco',
+  path: '/pitoco',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -50,14 +50,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/index-bckp': typeof IndexBckpRoute
-  '/recanto': typeof RecantoRoute
+  '/pitoco': typeof PitocoRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/index-bckp': typeof IndexBckpRoute
-  '/recanto': typeof RecantoRoute
+  '/pitoco': typeof PitocoRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesById {
@@ -66,21 +66,21 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/index-bckp': typeof IndexBckpRoute
-  '/recanto': typeof RecantoRoute
+  '/pitoco': typeof PitocoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/index-bckp' | '/recanto' | '/admin'
+  fullPaths: '/' | '/auth' | '/index-bckp' | '/pitoco' | '/admin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/index-bckp' | '/recanto' | '/admin'
+  to: '/' | '/auth' | '/index-bckp' | '/pitoco' | '/admin'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/index-bckp'
-    | '/recanto'
+    | '/pitoco'
     | '/_authenticated/admin'
   fileRoutesById: FileRoutesById
 }
@@ -89,7 +89,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   IndexBckpRoute: typeof IndexBckpRoute
-  RecantoRoute: typeof RecantoRoute
+  PitocoRoute: typeof PitocoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,11 +122,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexBckpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recanto': {
-      id: '/recanto'
-      path: '/recanto'
-      fullPath: '/recanto'
-      preLoaderRoute: typeof RecantoRouteImport
+    '/pitoco': {
+      id: '/pitoco'
+      path: '/pitoco'
+      fullPath: '/pitoco'
+      preLoaderRoute: typeof PitocoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -155,7 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   IndexBckpRoute: IndexBckpRoute,
-  RecantoRoute: RecantoRoute,
+  PitocoRoute: PitocoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

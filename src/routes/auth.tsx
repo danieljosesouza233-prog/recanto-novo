@@ -19,10 +19,11 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+const ADMIN_EMAIL_DOMAIN = "ajude-o-pitoco.local";
+
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "signup">("login");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -37,28 +38,16 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    if (mode === "login") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      setLoading(false);
-      if (error) {
-        setMessage("E-mail ou senha inválidos.");
-        return;
-      }
-      void navigate({ to: "/admin", replace: true });
-    } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: `${window.location.origin}/admin` },
-      });
-      setLoading(false);
-      if (error) {
-        setMessage(error.message);
-        return;
-      }
-      setMessage("Conta criada! Se pedir confirmação, verifique seu e-mail e depois entre.");
-      setMode("login");
+    const email = username.includes("@")
+      ? username.trim()
+      : `${username.trim().toLowerCase()}@${ADMIN_EMAIL_DOMAIN}`;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      setMessage("Usuário ou senha inválidos.");
+      return;
     }
+    void navigate({ to: "/admin", replace: true });
   };
 
   return (
@@ -71,7 +60,7 @@ function AuthPage() {
           </span>
         </div>
         <h1 className="mt-5 text-center text-xl font-extrabold tracking-tight">
-          {mode === "login" ? "Acesso administrativo" : "Criar acesso administrativo"}
+          Acesso administrativo
         </h1>
         <p className="mt-1.5 text-center text-xs text-muted-foreground">
           Área restrita para acompanhar as doações.
@@ -79,20 +68,21 @@ function AuthPage() {
 
         <form onSubmit={submit} className="mt-6 space-y-3">
           <input
-            type="email"
+            type="text"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="E-mail"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Usuário"
             className="w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold outline-none focus:border-primary"
           />
           <input
             type="password"
             required
-            minLength={8}
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Senha (mín. 8 caracteres)"
+            placeholder="Senha"
             className="w-full rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold outline-none focus:border-primary"
           />
           {message && <p className="text-xs font-semibold text-destructive">{message}</p>}
@@ -101,19 +91,9 @@ function AuthPage() {
             disabled={loading}
             className="btn-cta flex h-[54px] w-full items-center justify-center gap-2 px-6 text-base disabled:opacity-60"
           >
-            <Lock size={16} /> {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta"}
+            <Lock size={16} /> {loading ? "Aguarde..." : "Entrar"}
           </button>
         </form>
-
-        <button
-          onClick={() => {
-            setMode(mode === "login" ? "signup" : "login");
-            setMessage("");
-          }}
-          className="mt-4 w-full text-center text-xs font-semibold text-muted-foreground hover:text-foreground"
-        >
-          {mode === "login" ? "Primeiro acesso? Criar conta" : "Já tenho conta. Entrar"}
-        </button>
       </div>
     </main>
   );
