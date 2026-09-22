@@ -817,7 +817,7 @@ function StickyCTA({ onDonate }: { onDonate: () => void }) {
 /* ---------------- pix modal ---------------- */
 
 const PIX_KEY = "ajudeopitoco@outlook.com";
-const PIX_RECEIVER = "GUSTAVO NASCIMENTO";
+const PIX_RECEIVER = "GUSTAVO BRUNO SANTOS NASCIMENTO";
 
 const PIX_AMOUNTS = [25, 50, 75, 100, 125, 150, 175, 200];
 const PIX_MIN = 5;
