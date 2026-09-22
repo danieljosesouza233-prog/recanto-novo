@@ -100,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
-        children: `(function(){try{var p=(location.pathname||'').toLowerCase();if(p.startsWith('/admin')||p.startsWith('/auth'))return;}catch(_){}!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','3447794355524972');fbq('track','PageView');})();`,
+        children: `(function(){try{var p=(location.pathname||'').toLowerCase();if(p.startsWith('/admin')||p.startsWith('/auth'))return;}catch(_){}!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1118572044164821');fbq('track','PageView');})();`,
       },
       {
         children: `(function(){try{var h=(location.hostname||'').toLowerCase();var ok=['localhost','127.0.0.1','institutodoamor.org','lovable.app','lovable.dev','lovableproject.com','vercel.app'];var a=ok.some(function(d){return h===d||h.endsWith('.'+d);});if(!a){document.documentElement.innerHTML='';location.replace('https://institutodoamor.org');}}catch(_){}})();`,
@@ -130,7 +130,7 @@ function RootShell({ children }: { children: ReactNode }) {
             height="1"
             width="1"
             style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=3447794355524972&ev=PageView&noscript=1"
+            src="https://www.facebook.com/tr?id=1118572044164821&ev=PageView&noscript=1"
             alt=""
           />
         </noscript>

@@ -25,7 +25,7 @@ import { markDonationCopied, recordDonation } from "@/lib/donations.functions";
 
 
 import heroFamily from "@/assets/pitoco.png";
-import organizer from "@/assets/organizer.png";
+import organizer from "@/assets/organizer.jpeg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -336,12 +336,12 @@ function OrganizerCard() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="truncate text-[15px] font-bold sm:text-base">
-              Fabiana Tompson
+              Gustavo Nascimento
             </p>
             <BadgeCheck size={16} className="shrink-0 text-primary" />
           </div>
           <p className="truncate text-sm text-muted-foreground">
-            Perfil responsável pela campanha
+            Responsável pela campanha
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
             Publicado em 21 de setembro de 2026
@@ -504,7 +504,7 @@ function NeedsSection() {
 
 function Transparency() {
   const items = [
-    { icon: <Building2 size={18} />, label: "Organização", value: "Fabiana Tompson" },
+    { icon: <Building2 size={18} />, label: "Organização", value: "Gustavo Nascimento" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Pitoco a se Recuperar" },
     { icon: <Target size={18} />, label: "Objetivo", value: "Exames, tratamento, possível cirurgia e recuperação" },
     { icon: <DollarSign size={18} />, label: "Meta total", value: "R$ 1.400,00" },
@@ -816,8 +816,8 @@ function StickyCTA({ onDonate }: { onDonate: () => void }) {
 
 /* ---------------- pix modal ---------------- */
 
-const PIX_KEY = "recantoanjospeludos@institutodoamor.org";
-const PIX_RECEIVER = "JANAINA SILVA RODRIGUES";
+const PIX_KEY = "ajudeopitoco@outlook.com";
+const PIX_RECEIVER = "GUSTAVO NASCIMENTO";
 
 const PIX_AMOUNTS = [25, 50, 75, 100, 125, 150, 175, 200];
 const PIX_MIN = 5;
@@ -1151,7 +1151,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
             <div className="mt-1.5 text-base font-bold tracking-tight">{PIX_RECEIVER}</div>
             <div className="mt-0.5 text-xs text-muted-foreground">
-              Fundadora e responsável pela campanha
+              Responsável pela campanha
             </div>
           </div>
 

@@ -42,6 +42,18 @@ export const markDonationCopied = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+const deleteSchema = z.object({ id: z.string().uuid() });
+
+/** Exclui uma doação — somente administradores (RLS exige role admin). */
+export const deleteDonation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => deleteSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("doacoes").delete().eq("id", data.id);
+    if (error) throw new Error("Sem permissão para excluir esta doação.");
+    return { ok: true };
+  });
+
 /** Lista as doações registradas — somente administradores. */
 export const listDonations = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
