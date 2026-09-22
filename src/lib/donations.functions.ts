@@ -26,6 +26,14 @@ export const recordDonation = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) return { id: null as string | null };
+    await supabaseAdmin.from("doacoes_audit_log").insert({
+      doacao_id: row.id,
+      action: "created",
+      nome: data.nome,
+      celular: data.celular,
+      valor: data.valor,
+      status: "dados_enviados",
+    });
     return { id: row.id as string };
   });
 
@@ -44,26 +52,104 @@ export const markDonationCopied = createServerFn({ method: "POST" })
 
 const deleteSchema = z.object({ id: z.string().uuid() });
 
-/** Exclui uma doação — somente administradores (RLS exige role admin). */
+/** Move uma doação para a lixeira (soft delete) — somente administradores. */
 export const deleteDonation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => deleteSchema.parse(data))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("doacoes").delete().eq("id", data.id);
+    const { data: row, error: fetchError } = await context.supabase
+      .from("doacoes")
+      .select("nome, celular, valor, status")
+      .eq("id", data.id)
+      .single();
+    if (fetchError || !row) throw new Error("Doação não encontrada.");
+
+    const { error } = await context.supabase
+      .from("doacoes")
+      .update({ deleted_at: new Date().toISOString(), deleted_by: context.userId })
+      .eq("id", data.id);
     if (error) throw new Error("Sem permissão para excluir esta doação.");
+
+    await context.supabase.from("doacoes_audit_log").insert({
+      doacao_id: data.id,
+      action: "deleted",
+      actor_user_id: context.userId,
+      nome: row.nome,
+      celular: row.celular,
+      valor: row.valor,
+      status: row.status,
+    });
     return { ok: true };
   });
 
-/** Lista as doações registradas — somente administradores. */
+/** Restaura uma doação da lixeira — somente administradores. */
+export const restoreDonation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => deleteSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { data: row, error: fetchError } = await context.supabase
+      .from("doacoes")
+      .select("nome, celular, valor, status")
+      .eq("id", data.id)
+      .single();
+    if (fetchError || !row) throw new Error("Doação não encontrada.");
+
+    const { error } = await context.supabase
+      .from("doacoes")
+      .update({ deleted_at: null, deleted_by: null })
+      .eq("id", data.id);
+    if (error) throw new Error("Sem permissão para restaurar esta doação.");
+
+    await context.supabase.from("doacoes_audit_log").insert({
+      doacao_id: data.id,
+      action: "restored",
+      actor_user_id: context.userId,
+      nome: row.nome,
+      celular: row.celular,
+      valor: row.valor,
+      status: row.status,
+    });
+    return { ok: true };
+  });
+
+/** Lista as doações ativas (não excluídas) — somente administradores. */
 export const listDonations = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("doacoes")
       .select("id, nome, celular, valor, status, created_at")
+      .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(1000);
     if (error) throw new Error("Sem permissão para ver as doações.");
+    return data ?? [];
+  });
+
+/** Lista as doações na lixeira (excluídas) — somente administradores. */
+export const listDeletedDonations = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("doacoes")
+      .select("id, nome, celular, valor, status, created_at, deleted_at")
+      .not("deleted_at", "is", null)
+      .order("deleted_at", { ascending: false })
+      .limit(1000);
+    if (error) throw new Error("Sem permissão para ver a lixeira.");
+    return data ?? [];
+  });
+
+/** Lista o histórico de auditoria (criação/exclusão/restauração) — somente administradores. */
+export const listAuditLog = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("doacoes_audit_log")
+      .select("id, doacao_id, action, actor_user_id, nome, celular, valor, status, created_at")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    if (error) throw new Error("Sem permissão para ver o log de auditoria.");
     return data ?? [];
   });
 

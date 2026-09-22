@@ -2,9 +2,25 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
-import { Download, FileText, LogOut, RefreshCw, Trash2, Users } from "lucide-react";
+import {
+  Download,
+  FileText,
+  History,
+  LogOut,
+  RefreshCw,
+  RotateCcw,
+  Trash2,
+  Users,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { claimFirstAdmin, deleteDonation, listDonations } from "@/lib/donations.functions";
+import {
+  claimFirstAdmin,
+  deleteDonation,
+  listAuditLog,
+  listDeletedDonations,
+  listDonations,
+  restoreDonation,
+} from "@/lib/donations.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -33,6 +49,32 @@ type Donation = {
   created_at: string;
 };
 
+type DeletedDonation = Donation & { deleted_at: string };
+
+type AuditEntry = {
+  id: string;
+  doacao_id: string;
+  action: "created" | "deleted" | "restored";
+  actor_user_id: string | null;
+  nome: string;
+  celular: string;
+  valor: number;
+  status: string;
+  created_at: string;
+};
+
+const actionLabel: Record<AuditEntry["action"], string> = {
+  created: "Criada",
+  deleted: "Excluída",
+  restored: "Restaurada",
+};
+
+const actionStyle: Record<AuditEntry["action"], string> = {
+  created: "bg-primary-soft text-primary-dark",
+  deleted: "bg-destructive/10 text-destructive",
+  restored: "bg-muted text-muted-foreground",
+};
+
 const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2 });
 
@@ -46,11 +88,16 @@ function AdminPage() {
   const claim = useServerFn(claimFirstAdmin);
   const list = useServerFn(listDonations);
   const remove = useServerFn(deleteDonation);
+  const listDeleted = useServerFn(listDeletedDonations);
+  const restore = useServerFn(restoreDonation);
+  const listAudit = useServerFn(listAuditLog);
   const [bootstrapped, setBootstrapped] = useState(false);
+  const [tab, setTab] = useState<"doacoes" | "lixeira" | "auditoria">("doacoes");
   const [filter, setFilter] = useState<"todos" | "chave_copiada" | "dados_enviados">("todos");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
 
   useEffect(() => {
     void claim({})
@@ -62,6 +109,30 @@ function AdminPage() {
     queryKey: ["donations"],
     queryFn: () => list({}) as Promise<Donation[]>,
     enabled: bootstrapped,
+  });
+
+  const {
+    data: deletedData,
+    isLoading: isLoadingDeleted,
+    error: deletedError,
+    refetch: refetchDeleted,
+    isFetching: isFetchingDeleted,
+  } = useQuery({
+    queryKey: ["donations-deleted"],
+    queryFn: () => listDeleted({}) as Promise<DeletedDonation[]>,
+    enabled: bootstrapped && tab === "lixeira",
+  });
+
+  const {
+    data: auditData,
+    isLoading: isLoadingAudit,
+    error: auditError,
+    refetch: refetchAudit,
+    isFetching: isFetchingAudit,
+  } = useQuery({
+    queryKey: ["donations-audit"],
+    queryFn: () => listAudit({}) as Promise<AuditEntry[]>,
+    enabled: bootstrapped && tab === "auditoria",
   });
 
   const rows = useMemo(() => {
@@ -86,7 +157,7 @@ function AdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Excluir esta doação da lista? Essa ação não pode ser desfeita.")) return;
+    if (!window.confirm("Mover esta doação para a lixeira?")) return;
     setDeletingId(id);
     try {
       await remove({ data: { id } });
@@ -95,6 +166,18 @@ function AdminPage() {
       window.alert("Não foi possível excluir esta doação.");
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleRestore = async (id: string) => {
+    setRestoringId(id);
+    try {
+      await restore({ data: { id } });
+      await Promise.all([refetchDeleted(), refetch()]);
+    } catch {
+      window.alert("Não foi possível restaurar esta doação.");
+    } finally {
+      setRestoringId(null);
     }
   };
 
@@ -279,6 +362,30 @@ function AdminPage() {
           </div>
         </div>
 
+        <div className="mt-6 flex flex-wrap items-center gap-2 border-b border-border">
+          {(
+            [
+              { key: "doacoes", label: "Doações", icon: Users },
+              { key: "lixeira", label: "Lixeira", icon: Trash2 },
+              { key: "auditoria", label: "Auditoria", icon: History },
+            ] as const
+          ).map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`flex items-center gap-1.5 border-b-2 px-3 py-2 text-xs font-bold ${
+                tab === key
+                  ? "border-primary text-primary-dark"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon size={14} /> {label}
+            </button>
+          ))}
+        </div>
+
+        {tab === "doacoes" && (
+        <>
         <div className="mt-5 flex flex-wrap items-center gap-2">
           {(["todos", "chave_copiada", "dados_enviados"] as const).map((f) => (
             <button
@@ -390,6 +497,143 @@ function AdminPage() {
             </table>
           )}
         </div>
+        </>
+        )}
+
+        {tab === "lixeira" && (
+          <div className="mt-5">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Doações excluídas ficam aqui e podem ser restauradas a qualquer momento.
+              </p>
+              <button
+                onClick={() => void refetchDeleted()}
+                className="flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 text-xs font-bold hover:border-primary"
+              >
+                <RefreshCw size={14} className={isFetchingDeleted ? "animate-spin" : ""} /> Atualizar
+              </button>
+            </div>
+            <div className="overflow-x-auto rounded-2xl border border-border bg-background">
+              {isLoadingDeleted && <p className="p-6 text-sm text-muted-foreground">Carregando...</p>}
+              {deletedError && (
+                <p className="p-6 text-sm font-semibold text-destructive">
+                  Você não tem permissão para ver a lixeira.
+                </p>
+              )}
+              {!isLoadingDeleted && !deletedError && (deletedData ?? []).length === 0 && (
+                <p className="flex items-center gap-2 p-6 text-sm text-muted-foreground">
+                  <Trash2 size={16} /> A lixeira está vazia.
+                </p>
+              )}
+              {(deletedData ?? []).length > 0 && (
+                <table className="w-full text-left text-sm">
+                  <thead className="border-b border-border text-[11px] uppercase tracking-wider text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3">Excluída em</th>
+                      <th className="px-4 py-3">Nome</th>
+                      <th className="px-4 py-3">Celular</th>
+                      <th className="px-4 py-3">Valor</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(deletedData ?? []).map((d) => (
+                      <tr key={d.id} className="border-b border-border/60 last:border-0">
+                        <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                          {new Date(d.deleted_at).toLocaleString("pt-BR")}
+                        </td>
+                        <td className="px-4 py-3 font-semibold">{d.nome}</td>
+                        <td className="whitespace-nowrap px-4 py-3">{d.celular}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-bold">{brl(Number(d.valor))}</td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <span
+                            className={`rounded-lg px-2 py-1 text-[11px] font-bold ${
+                              d.status === "chave_copiada"
+                                ? "bg-primary-soft text-primary-dark"
+                                : "bg-muted text-muted-foreground"
+                            }`}
+                          >
+                            {d.status === "chave_copiada" ? "Chave copiada" : "Dados enviados"}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-right">
+                          <button
+                            onClick={() => void handleRestore(d.id)}
+                            disabled={restoringId === d.id}
+                            aria-label="Restaurar doação"
+                            className="flex items-center gap-1.5 rounded-lg border border-border px-2 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary hover:text-primary-dark disabled:opacity-50"
+                          >
+                            <RotateCcw size={13} /> Restaurar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        )}
+
+        {tab === "auditoria" && (
+          <div className="mt-5">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Histórico de criação, exclusão e restauração de doações — pra rastrear qualquer divergência.
+              </p>
+              <button
+                onClick={() => void refetchAudit()}
+                className="flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 text-xs font-bold hover:border-primary"
+              >
+                <RefreshCw size={14} className={isFetchingAudit ? "animate-spin" : ""} /> Atualizar
+              </button>
+            </div>
+            <div className="overflow-x-auto rounded-2xl border border-border bg-background">
+              {isLoadingAudit && <p className="p-6 text-sm text-muted-foreground">Carregando...</p>}
+              {auditError && (
+                <p className="p-6 text-sm font-semibold text-destructive">
+                  Você não tem permissão para ver a auditoria.
+                </p>
+              )}
+              {!isLoadingAudit && !auditError && (auditData ?? []).length === 0 && (
+                <p className="flex items-center gap-2 p-6 text-sm text-muted-foreground">
+                  <History size={16} /> Nenhum evento registrado ainda.
+                </p>
+              )}
+              {(auditData ?? []).length > 0 && (
+                <table className="w-full text-left text-sm">
+                  <thead className="border-b border-border text-[11px] uppercase tracking-wider text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3">Quando</th>
+                      <th className="px-4 py-3">Ação</th>
+                      <th className="px-4 py-3">Nome</th>
+                      <th className="px-4 py-3">Celular</th>
+                      <th className="px-4 py-3">Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(auditData ?? []).map((a) => (
+                      <tr key={a.id} className="border-b border-border/60 last:border-0">
+                        <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                          {new Date(a.created_at).toLocaleString("pt-BR")}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <span className={`rounded-lg px-2 py-1 text-[11px] font-bold ${actionStyle[a.action]}`}>
+                            {actionLabel[a.action]}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 font-semibold">{a.nome}</td>
+                        <td className="whitespace-nowrap px-4 py-3">{a.celular}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-bold">{brl(Number(a.valor))}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
