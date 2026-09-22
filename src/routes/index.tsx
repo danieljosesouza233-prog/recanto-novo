@@ -6,7 +6,6 @@ import {
   Heart,
   Users,
   Clock,
-  Building2,
   Target,
   DollarSign,
   Wallet,
@@ -504,7 +503,7 @@ function NeedsSection() {
 
 function Transparency() {
   const items = [
-    { icon: <Building2 size={18} />, label: "Organização", value: "Gustavo Nascimento" },
+    { icon: <User size={18} />, label: "Responsável", value: "Gustavo Nascimento" },
     { icon: <Heart size={18} />, label: "Campanha", value: "Ajude Pitoco a se Recuperar" },
     { icon: <Target size={18} />, label: "Objetivo", value: "Exames, tratamento, possível cirurgia e recuperação" },
     { icon: <DollarSign size={18} />, label: "Meta total", value: "R$ 1.400,00" },
