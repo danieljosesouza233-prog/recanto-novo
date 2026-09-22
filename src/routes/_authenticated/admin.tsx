@@ -9,6 +9,7 @@ import {
   LogOut,
   RefreshCw,
   RotateCcw,
+  Send,
   Trash2,
   Users,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import {
   listAuditLog,
   listDeletedDonations,
   listDonations,
+  listMetaEvents,
   restoreDonation,
 } from "@/lib/donations.functions";
 
@@ -75,6 +77,19 @@ const actionStyle: Record<AuditEntry["action"], string> = {
   restored: "bg-muted text-muted-foreground",
 };
 
+type MetaEvent = {
+  id: string;
+  doacao_id: string | null;
+  event_name: string;
+  event_id: string;
+  status: "success" | "failed";
+  http_status: number | null;
+  error: string | null;
+  requested_at: string;
+  responded_at: string | null;
+  latency_ms: number | null;
+};
+
 const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2 });
 
@@ -91,8 +106,9 @@ function AdminPage() {
   const listDeleted = useServerFn(listDeletedDonations);
   const restore = useServerFn(restoreDonation);
   const listAudit = useServerFn(listAuditLog);
+  const listEvents = useServerFn(listMetaEvents);
   const [bootstrapped, setBootstrapped] = useState(false);
-  const [tab, setTab] = useState<"doacoes" | "lixeira" | "auditoria">("doacoes");
+  const [tab, setTab] = useState<"doacoes" | "lixeira" | "auditoria" | "eventos">("doacoes");
   const [filter, setFilter] = useState<"todos" | "chave_copiada" | "dados_enviados">("todos");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -134,6 +150,29 @@ function AdminPage() {
     queryFn: () => listAudit({}) as Promise<AuditEntry[]>,
     enabled: bootstrapped && tab === "auditoria",
   });
+
+  const {
+    data: eventsData,
+    isLoading: isLoadingEvents,
+    error: eventsError,
+    refetch: refetchEvents,
+    isFetching: isFetchingEvents,
+  } = useQuery({
+    queryKey: ["meta-events"],
+    queryFn: () => listEvents({}) as Promise<MetaEvent[]>,
+    enabled: bootstrapped && tab === "eventos",
+  });
+
+  const eventsStats = useMemo(() => {
+    const list = eventsData ?? [];
+    const success = list.filter((e) => e.status === "success");
+    const failed = list.filter((e) => e.status === "failed");
+    const latencies = success.map((e) => e.latency_ms).filter((v): v is number => v != null);
+    const avgLatency = latencies.length
+      ? Math.round(latencies.reduce((s, v) => s + v, 0) / latencies.length)
+      : null;
+    return { total: list.length, success: success.length, failed: failed.length, avgLatency };
+  }, [eventsData]);
 
   const rows = useMemo(() => {
     const from = dateFrom ? new Date(`${dateFrom}T00:00:00`) : null;
@@ -368,6 +407,7 @@ function AdminPage() {
               { key: "doacoes", label: "Doações", icon: Users },
               { key: "lixeira", label: "Lixeira", icon: Trash2 },
               { key: "auditoria", label: "Auditoria", icon: History },
+              { key: "eventos", label: "Eventos Meta", icon: Send },
             ] as const
           ).map(({ key, label, icon: Icon }) => (
             <button
@@ -626,6 +666,104 @@ function AdminPage() {
                         <td className="px-4 py-3 font-semibold">{a.nome}</td>
                         <td className="whitespace-nowrap px-4 py-3">{a.celular}</td>
                         <td className="whitespace-nowrap px-4 py-3 font-bold">{brl(Number(a.valor))}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        )}
+
+        {tab === "eventos" && (
+          <div className="mt-5">
+            <p className="mb-3 text-sm text-muted-foreground">
+              Cada evento (pixel + Conversions API) enviado ao Meta fica registrado aqui — mostra se o
+              Facebook confirmou o recebimento (sucesso) ou recusou/falhou, com o horário exato e o tempo
+              de resposta. Não mostra quando o Facebook processa internamente o evento pra dentro das
+              campanhas — isso não é exposto pela API deles, só aparece no Gerenciador de Anúncios.
+            </p>
+            <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="rounded-2xl border border-border bg-background p-4">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Total
+                </div>
+                <div className="mt-1 text-2xl font-extrabold">{eventsStats.total}</div>
+              </div>
+              <div className="rounded-2xl border border-border bg-background p-4">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Enviados
+                </div>
+                <div className="mt-1 text-2xl font-extrabold text-primary-dark">{eventsStats.success}</div>
+              </div>
+              <div className="rounded-2xl border border-border bg-background p-4">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Falharam
+                </div>
+                <div className="mt-1 text-2xl font-extrabold text-destructive">{eventsStats.failed}</div>
+              </div>
+              <div className="rounded-2xl border border-border bg-background p-4">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Latência média
+                </div>
+                <div className="mt-1 text-2xl font-extrabold">
+                  {eventsStats.avgLatency != null ? `${eventsStats.avgLatency}ms` : "—"}
+                </div>
+              </div>
+            </div>
+            <div className="mb-3 flex justify-end">
+              <button
+                onClick={() => void refetchEvents()}
+                className="flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 text-xs font-bold hover:border-primary"
+              >
+                <RefreshCw size={14} className={isFetchingEvents ? "animate-spin" : ""} /> Atualizar
+              </button>
+            </div>
+            <div className="overflow-x-auto rounded-2xl border border-border bg-background">
+              {isLoadingEvents && <p className="p-6 text-sm text-muted-foreground">Carregando...</p>}
+              {eventsError && (
+                <p className="p-6 text-sm font-semibold text-destructive">
+                  Você não tem permissão para ver os eventos do Meta.
+                </p>
+              )}
+              {!isLoadingEvents && !eventsError && (eventsData ?? []).length === 0 && (
+                <p className="flex items-center gap-2 p-6 text-sm text-muted-foreground">
+                  <Send size={16} /> Nenhum evento registrado ainda.
+                </p>
+              )}
+              {(eventsData ?? []).length > 0 && (
+                <table className="w-full text-left text-sm">
+                  <thead className="border-b border-border text-[11px] uppercase tracking-wider text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3">Enviado em</th>
+                      <th className="px-4 py-3">Evento</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">Resposta (ms)</th>
+                      <th className="px-4 py-3">Detalhe</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(eventsData ?? []).map((e) => (
+                      <tr key={e.id} className="border-b border-border/60 last:border-0">
+                        <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                          {new Date(e.requested_at).toLocaleString("pt-BR")}
+                        </td>
+                        <td className="px-4 py-3 font-semibold">{e.event_name}</td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <span
+                            className={`rounded-lg px-2 py-1 text-[11px] font-bold ${
+                              e.status === "success"
+                                ? "bg-primary-soft text-primary-dark"
+                                : "bg-destructive/10 text-destructive"
+                            }`}
+                          >
+                            {e.status === "success" ? "Enviado" : "Falhou"}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3">{e.latency_ms ?? "—"}</td>
+                        <td className="max-w-xs truncate px-4 py-3 text-xs text-muted-foreground">
+                          {e.status === "failed" ? e.error : e.http_status ? `HTTP ${e.http_status}` : "—"}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

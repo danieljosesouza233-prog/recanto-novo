@@ -929,6 +929,7 @@ function PixModal({ open, onClose }: { open: boolean; onClose: () => void }) {
       value: chosenValue || 0,
       currency: "BRL",
       userData: { name, phone },
+      doacaoId: donationId ?? undefined,
     });
     if (donationId) void markDonationCopied({ data: { id: donationId } }).catch(() => {});
   };

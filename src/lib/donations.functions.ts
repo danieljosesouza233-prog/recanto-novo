@@ -153,6 +153,21 @@ export const listAuditLog = createServerFn({ method: "POST" })
     return data ?? [];
   });
 
+/** Lista o histórico de envio de eventos ao Meta (pixel/CAPI) — somente administradores. */
+export const listMetaEvents = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("meta_events_log")
+      .select(
+        "id, doacao_id, event_name, event_id, status, http_status, error, requested_at, responded_at, latency_ms",
+      )
+      .order("requested_at", { ascending: false })
+      .limit(500);
+    if (error) throw new Error("Sem permissão para ver os eventos do Meta.");
+    return data ?? [];
+  });
+
 /** Indica se o usuário logado é administrador. */
 export const isAdmin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

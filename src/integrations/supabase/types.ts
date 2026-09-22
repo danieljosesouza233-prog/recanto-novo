@@ -86,6 +86,48 @@ export type Database = {
         }
         Relationships: []
       }
+      meta_events_log: {
+        Row: {
+          doacao_id: string | null
+          error: string | null
+          event_id: string
+          event_name: string
+          fb_response: Json | null
+          http_status: number | null
+          id: string
+          latency_ms: number | null
+          requested_at: string
+          responded_at: string | null
+          status: string
+        }
+        Insert: {
+          doacao_id?: string | null
+          error?: string | null
+          event_id: string
+          event_name: string
+          fb_response?: Json | null
+          http_status?: number | null
+          id?: string
+          latency_ms?: number | null
+          requested_at?: string
+          responded_at?: string | null
+          status: string
+        }
+        Update: {
+          doacao_id?: string | null
+          error?: string | null
+          event_id?: string
+          event_name?: string
+          fb_response?: Json | null
+          http_status?: number | null
+          id?: string
+          latency_ms?: number | null
+          requested_at?: string
+          responded_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

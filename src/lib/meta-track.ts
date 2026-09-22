@@ -4,6 +4,7 @@ type TrackOptions = {
   value?: number;
   currency?: string;
   userData?: { name?: string; phone?: string };
+  doacaoId?: string;
 };
 
 function newEventId() {
@@ -76,6 +77,7 @@ export function trackMeta(eventName: string, options: TrackOptions = {}) {
       fbc: getFbc(),
       userAgent: navigator.userAgent,
       anonId: getAnonId(),
+      doacaoId: options.doacaoId,
     },
   }).catch(() => {});
 }

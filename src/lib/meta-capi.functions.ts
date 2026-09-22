@@ -18,6 +18,7 @@ const schema = z.object({
   fbc: z.string().max(200).optional(),
   userAgent: z.string().max(400).optional(),
   anonId: z.string().max(80).optional(),
+  doacaoId: z.string().uuid().optional(),
 });
 
 async function sha256(input: string) {
@@ -64,7 +65,18 @@ export const sendMetaEvent = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const token = process.env["META_CAPI_ACCESS_TOKEN"];
     const pixelId = process.env["META_PIXEL_ID"];
-    if (!token || !pixelId) return { ok: false as const };
+    if (!token || !pixelId) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin.from("meta_events_log").insert({
+        doacao_id: data.doacaoId ?? null,
+        event_name: data.eventName,
+        event_id: data.eventId,
+        status: "failed",
+        error: "META_CAPI_ACCESS_TOKEN ou META_PIXEL_ID não configurado no ambiente.",
+        requested_at: new Date().toISOString(),
+      });
+      return { ok: false as const };
+    }
 
     const user_data: Record<string, string[] | string> = {};
     const rawName = data.userData?.name?.trim().toLowerCase();
@@ -125,6 +137,9 @@ export const sendMetaEvent = createServerFn({ method: "POST" })
       ],
     };
 
+    const requestedAt = Date.now();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
     try {
       const res = await fetch(
         `https://graph.facebook.com/v21.0/${pixelId}/events?access_token=${encodeURIComponent(token)}`,
@@ -134,8 +149,33 @@ export const sendMetaEvent = createServerFn({ method: "POST" })
           body: JSON.stringify(body),
         },
       );
+      const responseBody = await res.json().catch(() => null);
+      const respondedAt = Date.now();
+      await supabaseAdmin.from("meta_events_log").insert({
+        doacao_id: data.doacaoId ?? null,
+        event_name: data.eventName,
+        event_id: data.eventId,
+        status: res.ok ? "success" : "failed",
+        http_status: res.status,
+        fb_response: responseBody,
+        error: res.ok ? null : JSON.stringify(responseBody),
+        requested_at: new Date(requestedAt).toISOString(),
+        responded_at: new Date(respondedAt).toISOString(),
+        latency_ms: respondedAt - requestedAt,
+      });
       return { ok: res.ok };
-    } catch {
+    } catch (err) {
+      const respondedAt = Date.now();
+      await supabaseAdmin.from("meta_events_log").insert({
+        doacao_id: data.doacaoId ?? null,
+        event_name: data.eventName,
+        event_id: data.eventId,
+        status: "failed",
+        error: err instanceof Error ? err.message : "Erro desconhecido ao enviar para o Meta.",
+        requested_at: new Date(requestedAt).toISOString(),
+        responded_at: new Date(respondedAt).toISOString(),
+        latency_ms: respondedAt - requestedAt,
+      });
       return { ok: false as const };
     }
   });
