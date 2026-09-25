@@ -118,7 +118,7 @@ export const listDonations = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("doacoes")
-      .select("id, nome, celular, valor, status, created_at")
+      .select("id, nome, celular, valor, status, created_at, pago")
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(1000);
@@ -132,7 +132,7 @@ export const listDeletedDonations = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("doacoes")
-      .select("id, nome, celular, valor, status, created_at, deleted_at")
+      .select("id, nome, celular, valor, status, created_at, deleted_at, pago")
       .not("deleted_at", "is", null)
       .order("deleted_at", { ascending: false })
       .limit(1000);
@@ -151,6 +151,36 @@ export const listAuditLog = createServerFn({ method: "POST" })
       .limit(500);
     if (error) throw new Error("Sem permissão para ver o log de auditoria.");
     return data ?? [];
+  });
+
+const setPagoSchema = z.object({ id: z.string().uuid(), pago: z.boolean() });
+
+/** Marca uma doação como paga/não paga — controle interno, não dispara nenhum evento de pixel. */
+export const setDonationPago = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => setPagoSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("doacoes")
+      .update({ pago: data.pago })
+      .eq("id", data.id);
+    if (error) throw new Error("Sem permissão para atualizar esta doação.");
+    return { ok: true };
+  });
+
+const setValorSchema = z.object({ id: z.string().uuid(), valor: z.number().nonnegative().max(1000000) });
+
+/** Corrige o valor de uma doação — controle interno, não dispara nenhum evento de pixel. */
+export const setDonationValor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => setValorSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("doacoes")
+      .update({ valor: data.valor })
+      .eq("id", data.id);
+    if (error) throw new Error("Sem permissão para atualizar esta doação.");
+    return { ok: true };
   });
 
 /** Lista o histórico de envio de eventos ao Meta (pixel/CAPI) — somente administradores. */

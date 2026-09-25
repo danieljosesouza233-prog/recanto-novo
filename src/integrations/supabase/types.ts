@@ -22,6 +22,7 @@ export type Database = {
           deleted_by: string | null
           id: string
           nome: string
+          pago: boolean
           status: string
           updated_at: string
           valor: number
@@ -33,6 +34,7 @@ export type Database = {
           deleted_by?: string | null
           id?: string
           nome: string
+          pago?: boolean
           status?: string
           updated_at?: string
           valor: number
@@ -44,6 +46,7 @@ export type Database = {
           deleted_by?: string | null
           id?: string
           nome?: string
+          pago?: boolean
           status?: string
           updated_at?: string
           valor?: number

@@ -3,15 +3,18 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 import {
+  Check,
   Download,
   FileText,
   History,
   LogOut,
+  Pencil,
   RefreshCw,
   RotateCcw,
   Send,
   Trash2,
   Users,
+  X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -22,6 +25,8 @@ import {
   listDonations,
   listMetaEvents,
   restoreDonation,
+  setDonationPago,
+  setDonationValor,
 } from "@/lib/donations.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -49,6 +54,7 @@ type Donation = {
   valor: number;
   status: string;
   created_at: string;
+  pago: boolean;
 };
 
 type DeletedDonation = Donation & { deleted_at: string };
@@ -107,8 +113,14 @@ function AdminPage() {
   const restore = useServerFn(restoreDonation);
   const listAudit = useServerFn(listAuditLog);
   const listEvents = useServerFn(listMetaEvents);
+  const setPago = useServerFn(setDonationPago);
+  const setValor = useServerFn(setDonationValor);
   const [bootstrapped, setBootstrapped] = useState(false);
   const [tab, setTab] = useState<"doacoes" | "lixeira" | "auditoria" | "eventos">("doacoes");
+  const [togglingPagoId, setTogglingPagoId] = useState<string | null>(null);
+  const [editingValorId, setEditingValorId] = useState<string | null>(null);
+  const [valorDraft, setValorDraft] = useState("");
+  const [savingValorId, setSavingValorId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"todos" | "chave_copiada" | "dados_enviados">("todos");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -217,6 +229,46 @@ function AdminPage() {
       window.alert("Não foi possível restaurar esta doação.");
     } finally {
       setRestoringId(null);
+    }
+  };
+
+  const handleTogglePago = async (d: Donation) => {
+    setTogglingPagoId(d.id);
+    try {
+      await setPago({ data: { id: d.id, pago: !d.pago } });
+      await refetch();
+    } catch {
+      window.alert("Não foi possível atualizar o status de pagamento.");
+    } finally {
+      setTogglingPagoId(null);
+    }
+  };
+
+  const startEditValor = (d: Donation) => {
+    setEditingValorId(d.id);
+    setValorDraft(String(d.valor));
+  };
+
+  const cancelEditValor = () => {
+    setEditingValorId(null);
+    setValorDraft("");
+  };
+
+  const saveValor = async (id: string) => {
+    const parsed = Number(valorDraft.replace(",", "."));
+    if (!Number.isFinite(parsed) || parsed < 0) {
+      window.alert("Valor inválido.");
+      return;
+    }
+    setSavingValorId(id);
+    try {
+      await setValor({ data: { id, valor: parsed } });
+      await refetch();
+      setEditingValorId(null);
+    } catch {
+      window.alert("Não foi possível atualizar o valor.");
+    } finally {
+      setSavingValorId(null);
     }
   };
 
@@ -498,6 +550,7 @@ function AdminPage() {
                   <th className="px-4 py-3">Celular</th>
                   <th className="px-4 py-3">Valor</th>
                   <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Pago</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
@@ -509,7 +562,48 @@ function AdminPage() {
                     </td>
                     <td className="px-4 py-3 font-semibold">{d.nome}</td>
                     <td className="whitespace-nowrap px-4 py-3">{d.celular}</td>
-                    <td className="whitespace-nowrap px-4 py-3 font-bold">{brl(Number(d.valor))}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-bold">
+                      {editingValorId === d.id ? (
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            autoFocus
+                            value={valorDraft}
+                            onChange={(e) => setValorDraft(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") void saveValor(d.id);
+                              if (e.key === "Escape") cancelEditValor();
+                            }}
+                            className="w-20 rounded-lg border border-border bg-background px-2 py-1 text-sm font-bold"
+                          />
+                          <button
+                            onClick={() => void saveValor(d.id)}
+                            disabled={savingValorId === d.id}
+                            aria-label="Salvar valor"
+                            className="rounded-lg p-1 text-primary-dark hover:bg-primary-soft disabled:opacity-50"
+                          >
+                            <Check size={14} />
+                          </button>
+                          <button
+                            onClick={cancelEditValor}
+                            aria-label="Cancelar edição"
+                            className="rounded-lg p-1 text-muted-foreground hover:bg-muted"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => startEditValor(d)}
+                          className="group flex items-center gap-1.5 hover:text-primary-dark"
+                          aria-label="Editar valor"
+                        >
+                          {brl(Number(d.valor))}
+                          <Pencil size={12} className="opacity-0 group-hover:opacity-60" />
+                        </button>
+                      )}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-3">
                       <span
                         className={`rounded-lg px-2 py-1 text-[11px] font-bold ${
@@ -520,6 +614,19 @@ function AdminPage() {
                       >
                         {d.status === "chave_copiada" ? "Chave copiada" : "Dados enviados"}
                       </span>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3">
+                      <button
+                        onClick={() => void handleTogglePago(d)}
+                        disabled={togglingPagoId === d.id}
+                        className={`rounded-lg px-2 py-1 text-[11px] font-bold transition-colors disabled:opacity-50 ${
+                          d.pago
+                            ? "bg-primary-soft text-primary-dark"
+                            : "bg-muted text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                        }`}
+                      >
+                        {d.pago ? "Pago" : "Não pago"}
+                      </button>
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
                       <button
